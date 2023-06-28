@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('restaurants', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
+            $table->bigInteger('user_id')->nullable();
             $table->string('name');
             $table->string('name_katakana');
             $table->integer('review');
-            $table->string('food_picture');
+            $table->string('food_picture')->nullable();
             $table->string('map_url');
-            $table->integer('phone_number');
+            $table->integer('phone_number')->nullable();
             $table->longText('comment');
             $table->softDeletes('deleted_at');
             $table->timestamps();
