@@ -9,8 +9,22 @@ use Illuminate\Http\Request;
 class RestaurantController extends Controller
 {
     // Show all restaurants
-    public function index(){
-        $restaurants = Restaurant::all();
+    public function index(Request $request){
+
+        if($request->filled('search')){
+            $search = $request->input('search');
+
+            // print_r($search);
+
+            $restaurants = Restaurant::where('name', 'LIKE', "%{$search}%")
+            ->orWhere('name_katakana', 'LIKE', "%{$search}%")
+            ->orWhere('comment', 'LIKE', "%{$search}%")
+            ->paginate(10);
+
+        } else {
+            $restaurants = Restaurant::paginate(10);
+        }
+
         return view('restaurants.index', ['restaurants' => $restaurants]);
     }
 
@@ -24,6 +38,7 @@ class RestaurantController extends Controller
     public function create(){
         return view('restaurants.create');
     }
+
 
     // Pass input data to confirmation page
     public function confirm(Request $request){
@@ -82,33 +97,68 @@ class RestaurantController extends Controller
             //'food_picture' => ['nullable', 'image']
         ]);
 
+
         $action = $request->input('action');
         $formFields = $request->except('action');
 
-        
-        if($action === 'submit'){
 
-            $formFields['user_id'] = 7;
-            $formFields['food_picture'] = "https://via.placeholder.com/150x150.png/003399?text=food+et";
 
-            Restaurant::create($formFields);
-            return redirect()->route('restaurants.index');            
+
+
+        if ($action === 'submit') {
+            $restaurantId = $request->input('id');
+            $existingRestaurant = Restaurant::findOrFail($restaurantId);
+    
+            if ($existingRestaurant) {
+                $existingRestaurant->update($validatedData);
+            
+
+        // if($action === 'submit'){
+
+            // Update or create new restaurant data
+            // $restaurantId = $request->input('restaurant_id');
+            // $restaurantId = $request->input('id');
+
+            // $existingRestaurant = Restaurant::findOrFail($restaurantId);
+
+            // if($restaurantId){
+            // if($existingRestaurant){
+
+                // Update the existing restaurant
+                // $restaurant = Restaurant::findOrFail($restaurantId);
+
+                // print_r($restaurant);
+
+                // $restaurant->update($validatedData);
+
+            } else {
+                // Change this "nullable is not working"
+                $formFields['user_id'] = 0;
+                $formFields['food_picture'] = "https://via.placeholder.com/150x150.png/003399?text=food+et";
+                $formFields['map_url'] = "http://schimmel.com/";
+
+                // Create a new restaurant
+                Restaurant::create($formFields);  
+            }   
+
+            return redirect()->route('restaurants.index'); 
         } 
 
         return redirect()->route('restaurants.create')->withInput($formFields);
     }
 
-
-
-
-
-
-
-
     // Show edit form
-    public function edit(Restaurant $restaurant){
-        return view('restaurant.edit', ['restaurant' => $restaurant]);
+    public function edit($id){
+
+        $restaurant = Restaurant::findOrFail($id);
+
+        return view('restaurants.create', ['restaurant' => $restaurant]);
     }
+
+
+
+
+
 
 
     // Update restaurant data
@@ -127,10 +177,17 @@ class RestaurantController extends Controller
         return back();
     }
 
-    // Delete restaurant
-    public function destroy(Restaurant $restaurant){
-        $restaurant->delete();
 
-        return redirect('/');
+
+
+    // Delete restaurant
+    public function destroy($id){
+
+        $restaurant = Restaurant::findOrFail($id);
+        if($restaurant){
+            $restaurant->delete();
+        }
+        
+        return redirect()->route('restaurants.index');
     }
 }

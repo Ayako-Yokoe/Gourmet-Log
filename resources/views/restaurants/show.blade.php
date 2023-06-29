@@ -45,7 +45,9 @@
             type="button"
             class="border-2 border-gray-300 rounded-lg px-2 py-1"
         >
-            Back to the Restaurant List
+            <a href="/restaurants"> 
+                Back to the Restaurant List
+            </a>
         </button>
     </div>
 

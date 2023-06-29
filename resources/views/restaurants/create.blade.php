@@ -7,6 +7,9 @@
     <h1>Create/Edit Restaurant</h1>
 
     <div>
+
+        {{-- <form method="POST" action="{{ $restaurant->id ? route('restaurants.store') : route('restaurants.confirm') }}"> --}}
+
         <form method="POST" action="{{ route('restaurants.confirm') }}">
             @csrf
 
@@ -15,7 +18,8 @@
                 <input 
                     type="text" 
                     name="name" 
-                    value="{{ old('name')}}"
+                    value="{{ $restaurant->name ?? old('name')}}"
+
                     {{-- required  --}}
                     class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-1/4"
                 />
@@ -30,7 +34,7 @@
                 <input 
                     type="text" 
                     name="name_katakana" 
-                    value="{{ old('name_katakana')}}"
+                    value="{{ $restaurant->name_katakana ?? old('name_katakana')}}"
                     required 
                     class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-1/4"
                 />
@@ -43,11 +47,11 @@
             {{-- Checked for the old value didn't work --}}
             <div>                                                                               
                 <span>Category</span>
-                <input type="checkbox" id="category1" name="categories[]" value="Japanese" @if (in_array('Japanese', (array) old('categories', []))) checked @endif />
+                <input type="checkbox" id="category1" name="categories[]" value="Japanese" @if (in_array('Japanese', (array) ($restaurant->categories ?? old('categories', [])))) checked @endif />
                 <label for="category1">Japanese</label>
-                <input type="checkbox" id="category2" name="categories[]" value="Chinese" @if (in_array('Chinese', (array) old('categories', []))) checked @endif />
+                <input type="checkbox" id="category2" name="categories[]" value="Chinese" @if (in_array('Chinese', (array) ($restaurant->categories ?? old('categories', [])))) checked @endif />
                 <label for="category2">Chinese</label>
-                <input type="checkbox" id="category3" name="categories[]" value="French" @if (in_array('French', (array) old('categories', []))) checked @endif />
+                <input type="checkbox" id="category3" name="categories[]" value="French" @if (in_array('French', (array) ($restaurant->categories ?? old('categories', [])))) checked @endif />
                 <label for="category3">French</label>
             </div>
 
@@ -62,7 +66,7 @@
                     required
                     class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-1/4"
                 >
-                    <option value="" selected></option>
+                    <option value="" selected>{{ $restaurant->review ?? "" }}</option>
                     <option value="5" @if(old('review') == '5') selected @endif>5</option>
                     <option value="4" @if(old('review') == '4') selected @endif>4</option>
                     <option value="3" @if(old('review') == '3') selected @endif>3</option>
@@ -80,7 +84,7 @@
                 <input 
                     type="file" 
                     name="food_picture"
-                    value="{{ old('food_picture')}}"
+                    value="{{ $restaurant->food_picture ?? old('food_picture')}}"
                     {{-- value="https://via.placeholder.com/150x150.png/003399?text=food+et" --}}
                     />
             </div>
@@ -90,16 +94,16 @@
             @enderror
 
             <div>
-                <label for="url">Google Map URL</label><br>
+                <label for="map_url">Google Map URL</label><br>
                 <input 
                     type="url" 
-                    name="url" 
-                    value="{{ old('url')}}"
+                    name="map_url" 
+                    value="{{ $restaurant->map_url ?? old('map_url')}}"
                     class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-1/4"
                 />
             </div>
 
-            @error('url')
+            @error('map_url')
                 <p class="text-red-500 text-xs mt-1">{{$message}}</p>
             @enderror
 
@@ -108,7 +112,7 @@
                 <input 
                     type="tel" 
                     name="phone_number" 
-                    value="{{ old('phone_number')}}"
+                    value="{{ $restaurant->phone_number ?? old('phone_number')}}"
                     class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-1/4"
                 />
             </div>
@@ -122,7 +126,7 @@
                 <input 
                     type="text" 
                     name="comment" 
-                    value="{{ old('comment')}}"
+                    value="{{ $restaurant->comment ?? old('comment')}}"
                     required 
                     class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-1/4"
                 />
@@ -131,6 +135,10 @@
             @error('comment')
                 <p class="text-red-500 text-xs mt-1">{{$message}}</p>
             @enderror
+
+            {{-- <input type="hidden" name="restaurant_id" value="{{ $restaurant ? $restaurant->id : null }}" /> --}}
+
+            <input type="hidden" name="restaurant_id" value="{{ $restaurant->id ? $restaurant->id : null }}" />
 
             <button 
                 type="submit"

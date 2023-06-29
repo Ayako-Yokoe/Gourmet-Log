@@ -9,11 +9,13 @@
     
     {{-- Search Restaurant --}}
     <div class="my-4">
-        <form>
+        <form method="GET" action="{{ route('restaurants.index') }}">
             <input 
-                type="text" 
+                type="search"
+                name="search"
                 placeholder="Enter a name of a restaurant" 
                 class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-1/4" 
+                value="{{ request('search') }}"
                 />
             <button 
                 type="submit"
@@ -27,7 +29,9 @@
     {{-- Show Restaurant List --}}
     <div>
 
-        <p class="my-4">1-10/50</p>
+        <div class="flex justify-end">
+            <p class="my-4 mr-2">1-10/50</p>
+        </div>
 
         <table class="table-auto w-full text-center">
             <thead>
@@ -43,6 +47,7 @@
                 </tr>
             </thead>
             <tbody>
+
                 @foreach ($restaurants as $restaurant)
                     
                 <tr class="px-4">
@@ -51,6 +56,7 @@
                     <td class="border border-slate-300">category</td>
                     <td class="border border-slate-300">{{ $restaurant->review }}</td>
                     <td class="border border-slate-300">{{ $restaurant->comment }}</td>
+
                     <td class="border border-slate-300">
                         <a href="/restaurants/{{ $restaurant->id }}">
                         <span class="bg-green-700 text-white rounded-xl px-3 py-1 my-2 hover:text-green-700 hover:bg-white border-2 border-green-700">
@@ -58,24 +64,39 @@
                         </span>
                         </a>
                     </td>
+
                     <td class="border border-slate-300">
-                        <a href="/restaurants/{{ $restaurant->id }}">
+                        <a href="{{ route('restaurants.edit', ['id' => $restaurant->id] )}}">
                         <span class="bg-blue-700 text-white rounded-xl px-3 py-1 hover:text-blue-700 hover:bg-white border-2 border-blue-700">
                             Edit
                         </span>
                         </a>
                     </td>
+
                     <td class="border border-slate-300">
-                        <button class="bg-red-700 text-white rounded-xl px-3 py-1 hover:text-red-700 hover:bg-white border-2 border-red-700">
-                            Delete
-                        </button>
+                        <form method="POST" action="/restaurants/{{$restaurant->id}}">
+                            @csrf
+                            @method('DELETE')
+                            <button 
+                                type="submit"
+                                class="bg-red-700 text-white rounded-xl px-3 py-1 hover:text-red-700 hover:bg-white border-2 border-red-700"
+                                onclick="return confirm('本当に削除してもよろしいですか？')"
+                            >
+                                Delete
+                            </button>
+                        </form>
                     </td>
                 </tr>
 
                 @endforeach
             </tbody>
         </table>
-        <p class="my-6">'<'1 2  3''>'</p>
+
+
+        <div class="my-4">
+            {{ $restaurants->render('components.pagination') }}
+        </div>
+        
     </div>
 </div>
 

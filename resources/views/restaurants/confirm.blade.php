@@ -41,8 +41,8 @@
 
         <div>
             <label>Google Map URL:</label>
-            {{ $inputs['url'] }}
-            <input type="hidden" name="url" value="{{ $inputs['url'] }}" />
+            {{ $inputs['map_url'] }}
+            <input type="hidden" name="map_url" value="{{ $inputs['map_url'] }}" />
         </div>
 
         <div>

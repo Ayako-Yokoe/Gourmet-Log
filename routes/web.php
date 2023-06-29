@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 // Restaurants
 // Show all restaurants
- Route::get('/restaurants', [RestaurantController::class, 'index']);
+ Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index');
 
  // Store new restaurant data
 Route::post('/restaurants', [RestaurantController::class, 'store'])->name('restaurants.store');
@@ -29,28 +29,26 @@ Route::post('/restaurants', [RestaurantController::class, 'store'])->name('resta
 // Show create form -- order matters
 Route::get('/restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create');
 
-// Edit before confirmation or store newly created restaurant
-Route::post('/restaurants/store', [RestaurantController::class, 'store'])->name('restaurants.store');
-
 // Show confirmation page
 Route::post('restaurants/confirm', [RestaurantController::class, 'confirm'])->name('restaurants.confirm');
+
+// Edit before confirmation or store newly created restaurant
+Route::post('/restaurants/store', [RestaurantController::class, 'store'])->name('restaurants.store');
 
 // Show single restaurant
 Route::get('/restaurants/{id}', [RestaurantController::class, 'show']);
 
 
-
-
-
-
-
-
-
 // Show edit form
-Route::get('/restaurants/{id}/edit', [RestaurantController::class, 'edit']);
-    
+Route::get('/restaurants/{id}/edit', [RestaurantController::class, 'edit'])->name('restaurants.edit');
+
+
+
+
 // Update restaurant data
 Route::put('/restaurants/{id}', [RestaurantController::class, 'update']);
+
+
     
 // Delete restaurant
 Route::delete('/restaurants/{id}', [RestaurantController::class, 'destroy']);
