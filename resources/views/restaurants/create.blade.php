@@ -3,7 +3,7 @@
 @section('main')
 
 
-<div>
+<div class="w-1/3 mx-auto mt-20">
     <h1>Create/Edit Restaurant</h1>
 
     <div>
@@ -13,15 +13,17 @@
         <form method="POST" action="{{ route('restaurants.confirm') }}">
             @csrf
 
+            {{-- <p>id: {{ $restaurant->id }}</p> --}}
+            <input type="hidden" name="restaurant_id" value="{{ $restaurant?->id ?? null }}" />
+
             <div>
                 <label for="name">Name of Restaurant</label><br>
                 <input 
                     type="text" 
                     name="name" 
                     value="{{ $restaurant->name ?? old('name')}}"
-
-                    {{-- required  --}}
-                    class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-1/4"
+                    required 
+                    class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-3/4"
                 />
             </div>
 
@@ -36,7 +38,7 @@
                     name="name_katakana" 
                     value="{{ $restaurant->name_katakana ?? old('name_katakana')}}"
                     required 
-                    class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-1/4"
+                    class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-3/4"
                 />
             </div>
 
@@ -64,7 +66,7 @@
                 <select 
                     name="review" 
                     required
-                    class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-1/4"
+                    class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-3/4"
                 >
                     <option value="" selected>{{ $restaurant->review ?? "" }}</option>
                     <option value="5" @if(old('review') == '5') selected @endif>5</option>
@@ -99,7 +101,7 @@
                     type="url" 
                     name="map_url" 
                     value="{{ $restaurant->map_url ?? old('map_url')}}"
-                    class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-1/4"
+                    class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-3/4"
                 />
             </div>
 
@@ -110,10 +112,11 @@
             <div>
                 <label for="phone_number">Phone Number</label><br>
                 <input 
-                    type="tel" 
+                    type="text" 
                     name="phone_number" 
+                    pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                     value="{{ $restaurant->phone_number ?? old('phone_number')}}"
-                    class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-1/4"
+                    class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-3/4"
                 />
             </div>
 
@@ -128,7 +131,7 @@
                     name="comment" 
                     value="{{ $restaurant->comment ?? old('comment')}}"
                     required 
-                    class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-1/4"
+                    class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-3/4"
                 />
             </div>
 
@@ -138,11 +141,11 @@
 
             {{-- <input type="hidden" name="restaurant_id" value="{{ $restaurant ? $restaurant->id : null }}" /> --}}
 
-            <input type="hidden" name="restaurant_id" value="{{ $restaurant->id ? $restaurant->id : null }}" />
+            {{-- <input type="hidden" name="restaurant_id" value="{{ $restaurant?->id ?? null }}" /> --}}
 
             <button 
                 type="submit"
-                class="border-2 border-gray-300 rounded-lg px-2 py-1"
+                class="border-2 border-gray-300 rounded-lg mt-6 px-2 py-1"
             >
                 To Confirmation Page
             </button>

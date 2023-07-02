@@ -8,6 +8,9 @@
     <form method="POST" action="{{ route('restaurants.store') }}">
         @csrf
 
+        <p>id: {{ $inputs['id'] }}</p>
+        <input type="hidden" name="id" value="{{ $inputs['id'] }}" />
+
         <div>
             <label>Name:</label>
             {{ $inputs['name'] }}
@@ -56,6 +59,8 @@
             {{ $inputs['comment'] }}
             <input type="hidden" name="comment" value="{{ $inputs['comment'] }}" />
         </div>
+
+        <input type="hidden" name="restaurant_id" value="{{ $inputs['id'] }}" />
 
         </div>
             <button 

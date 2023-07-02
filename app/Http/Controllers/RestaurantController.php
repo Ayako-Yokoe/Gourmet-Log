@@ -25,12 +25,21 @@ class RestaurantController extends Controller
             $restaurants = Restaurant::paginate(10);
         }
 
+        // Format phone number
+        foreach ($restaurants as $restaurant){
+            $phoneNumber = formatPhoneNumber($restaurant->phone_number);
+            $restaurant->phone_number = $phoneNumber;
+        }
+
         return view('restaurants.index', ['restaurants' => $restaurants]);
     }
 
     // Show single restaurant
     public function show($id){
         $restaurant = Restaurant::findOrFail($id);
+        $phoneNumber = formatPhoneNumber($restaurant['phone_number']);
+        $restaurant['phone_number'] = $phoneNumber;
+        
         return view('restaurants.show', ['restaurant' => $restaurant]);
     }
 
@@ -53,7 +62,7 @@ class RestaurantController extends Controller
             'name_katakana' => ['required', 'regex:/^[ア-ン゛゜ァ-ォャ-ョー]+$/u'],
             'categories' => ['required', 'array', 'required_without_all:' . implode(',', $dynamicCategories)],
             'review' => ['required', 'numeric', 'min:1', 'max:5'],
-            'phone_number' => 'integer',
+            // 'phone_number' => 'integer',
             'comment' => ['required', 'max:300'],
             'food_picture' => ['nullable', 'image']
         ]);
@@ -63,6 +72,8 @@ class RestaurantController extends Controller
 
         $formFields = $request->all();
         $formFields['categories'] = $categoryString;
+
+        $formFields['id'] = $request->input('restaurant_id');
 
         return view('restaurants.confirm', [
             'inputs' => $formFields
@@ -86,13 +97,18 @@ class RestaurantController extends Controller
         //     'categories' => $categoryString
         // ]);
 
+        // Remove hyphens from phone number
+        $phoneNumber = str_replace('-', '', $request->input('phone_number'));
+        $phoneNumberAsInteger = (int) $phoneNumber;
+
         $validatedData = $request->validate([
             'name' => ['required', 'max:20', 'string'],
             'name_katakana' => ['required', 'regex:/^[ア-ン゛゜ァ-ォャ-ョー]+$/u'],
             // 'categories' => ['required', 'array', 'required_without_all:' . implode(',', $dynamicCategories)],
             //'categories' => ['required', 'array'],
             'review' => ['required', 'numeric', 'min:1', 'max:5'],
-            'phone_number' => 'integer',
+            // 'phone_number' => 'integer',
+            $phoneNumberAsInteger => 'integer',
             'comment' => ['required', 'max:300'],
             //'food_picture' => ['nullable', 'image']
         ]);
@@ -101,50 +117,38 @@ class RestaurantController extends Controller
         $action = $request->input('action');
         $formFields = $request->except('action');
 
+        //$formFields['phone_number'] = $phoneNumberAsInteger;
 
-
-
-
-        if ($action === 'submit') {
-            $restaurantId = $request->input('id');
-            $existingRestaurant = Restaurant::findOrFail($restaurantId);
-    
-            if ($existingRestaurant) {
-                $existingRestaurant->update($validatedData);
-            
-
-        // if($action === 'submit'){
-
+        if($action === 'submit'){
             // Update or create new restaurant data
-            // $restaurantId = $request->input('restaurant_id');
-            // $restaurantId = $request->input('id');
+            $restaurantId = $request->input('id');
+            $existingRestaurant = Restaurant::find($restaurantId);
 
-            // $existingRestaurant = Restaurant::findOrFail($restaurantId);
-
-            // if($restaurantId){
-            // if($existingRestaurant){
-
+            if($existingRestaurant){          
                 // Update the existing restaurant
-                // $restaurant = Restaurant::findOrFail($restaurantId);
-
-                // print_r($restaurant);
-
-                // $restaurant->update($validatedData);
+                $restaurant = Restaurant::find($restaurantId);
+                $restaurant->update($validatedData);
 
             } else {
                 // Change this "nullable is not working"
                 $formFields['user_id'] = 0;
                 $formFields['food_picture'] = "https://via.placeholder.com/150x150.png/003399?text=food+et";
                 $formFields['map_url'] = "http://schimmel.com/";
+                $formFields['phone_number'] = $phoneNumberAsInteger;
 
                 // Create a new restaurant
                 Restaurant::create($formFields);  
             }   
 
             return redirect()->route('restaurants.index'); 
-        } 
 
-        return redirect()->route('restaurants.create')->withInput($formFields);
+        } else {
+            // Return to the create page with input
+            $phoneNumber = formatPhoneNumber($phoneNumberAsInteger);
+            $formFields['phone_number'] = $phoneNumber;
+
+            return redirect()->route('restaurants.create')->withInput($formFields);
+        }
     }
 
     // Show edit form
@@ -152,33 +156,11 @@ class RestaurantController extends Controller
 
         $restaurant = Restaurant::findOrFail($id);
 
+        $phoneNumber = formatPhoneNumber($restaurant['phone_number']);
+        $restaurant['phone_number'] = $phoneNumber;
+
         return view('restaurants.create', ['restaurant' => $restaurant]);
     }
-
-
-
-
-
-
-
-    // Update restaurant data
-    public function update(Request $request, Restaurant $restaurant){
-        $formFields = $request->validate([
-            'name' => ['required', 'max:20', 'string'],
-            'name_katakana' => ['required', 'regex:/^[ア-ン゛゜ァ-ォャ-ョー]+$/u'],
-            // 'category' =>   ,
-            'review' => ['required', 'integer', 'min:1', 'max:5'],
-            'phone_number' => 'integer',
-            'comment' => ['required', 'max:300']
-        ]);
-
-        $restaurant->update($formFields);
-
-        return back();
-    }
-
-
-
 
     // Delete restaurant
     public function destroy($id){
