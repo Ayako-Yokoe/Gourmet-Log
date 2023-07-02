@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RestaurantController;
 
 /*
@@ -38,20 +39,25 @@ Route::post('/restaurants/store', [RestaurantController::class, 'store'])->name(
 // Show single restaurant
 Route::get('/restaurants/{id}', [RestaurantController::class, 'show']);
 
-
 // Show edit form
 Route::get('/restaurants/{id}/edit', [RestaurantController::class, 'edit'])->name('restaurants.edit');
-
-
-
 
 // Update restaurant data
 Route::put('/restaurants/{id}', [RestaurantController::class, 'update']);
 
-
-    
 // Delete restaurant
 Route::delete('/restaurants/{id}', [RestaurantController::class, 'destroy']);
     
 
+
+
+// Categories
+// Show create form and list of all categories
+Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+
+// Store newly created category
+Route::post('/categories/store', [CategoryController::class, 'store'])->name('categories.store');
+
+// Delete category
+Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
