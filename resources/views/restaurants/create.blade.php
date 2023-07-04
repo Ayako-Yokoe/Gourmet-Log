@@ -48,7 +48,8 @@
 
             {{-- Checked for the old value didn't work --}}
             <div>                                                                               
-                <span>Category</span>
+                <span>Category</span><br>
+    
                 <input type="checkbox" id="category1" name="categories[]" value="Japanese" @if (in_array('Japanese', (array) ($restaurant->categories ?? old('categories', [])))) checked @endif />
                 <label for="category1">Japanese</label>
                 <input type="checkbox" id="category2" name="categories[]" value="Chinese" @if (in_array('Chinese', (array) ($restaurant->categories ?? old('categories', [])))) checked @endif />
@@ -138,10 +139,6 @@
             @error('comment')
                 <p class="text-red-500 text-xs mt-1">{{$message}}</p>
             @enderror
-
-            {{-- <input type="hidden" name="restaurant_id" value="{{ $restaurant ? $restaurant->id : null }}" /> --}}
-
-            {{-- <input type="hidden" name="restaurant_id" value="{{ $restaurant?->id ?? null }}" /> --}}
 
             <button 
                 type="submit"

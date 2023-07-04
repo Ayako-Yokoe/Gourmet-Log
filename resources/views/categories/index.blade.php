@@ -47,30 +47,85 @@
                 </tr>
             </thead>
 
+
             <tbody>
                @foreach ($categories as $category)
                    <tr class="px-4">
                         <td class="border border-slate-300">{{ $category->id }}</td>
 
-                {{-- !!! --}}
-                    {{-- @if () --}}
-                        <td class="border border-slate-300">{{ $category->name }}</td>
-                    {{-- @endif ()
+
+                        @if (!$isEditing)
+                            <td class="border border-slate-300">{{ $category->name }}</td>
+                        @else
+                            <td class="border border-slate-300">
+                                <form method="POST" action="/categories/{{ $category->id }}" >
+                                    @csrf
+                                    @method('PUT')
+
+                                    <input 
+                                        type="text" 
+                                        name="name"
+                                        value="{{ $category->name }}"
+                                        class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-3/4"
+                                    />
+                                    <button 
+                                        type="submit"
+                                        class="border border-gray-400 bg-gray-300 rounded-lg mt-2 px-2 py-1"
+                                    >
+                                        Save
+                                    </button>
+                                </form>
+                            </td>
+
+                        @endif
+
+                    {{-- @if ($isEditing && $editingCategoryId === $category->id )
                         <td>
-                            <form method="POST" action="" >
+                            <form method="POST" action="/categories/{{ $category->id }}" >
                                 @csrf
-                                <input type="text" name="category" />
+                                @method('PUT')
+
+                                <input 
+                                    type="text" 
+                                    name="name"
+                                    value="{{ $category->name }}"
+                                    class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-1/4"
+                                />
+                                <button 
+                                    type="submit"
+                                    class="border border-gray-400 bg-gray-300 rounded-lg mt-2 px-2 py-1"
+                                >
+                                    Save
+                                </button>
                             </form>
                         </td>
-
+                    
+                    @else
+                        <td class="border border-slate-300">{{ $category->name }}</td>
                     @endif --}}
+
                 {{-- !!! --}}
 
-
- 
                         <td class="border border-slate-300">
-                            <button type="submit">Edit</button>
-                            {{-- <a href="/categories/{id}/edit">Edit</a> --}}
+                            {{-- <form method="POST" action="/categories/{{ $category->id }}/edit">
+                                @csrf
+
+                                <input type="hidden" name="editingCategoryId" value="{{ $category->id }}" />
+                                <button
+                                    type="submit"
+                                    class="bg-red-700 text-white rounded-xl px-3 py-1 hover:text-red-700 hover:bg-white border-2 border-red-700"
+                                >
+                                    Edit
+                                </button>
+                            </form> --}}
+
+                            <form method="POST" action="/categories/{{ $category->id }}/edit">
+                                @csrf
+                                <button type="submit" class="bg-violet-700 text-white rounded-xl px-3 py-1 hover:text-violet-700 hover:bg-white border-2 border-violet-700">
+                                    Edit
+                                </button>
+                            </form>
+                            
                         </td>
 
 

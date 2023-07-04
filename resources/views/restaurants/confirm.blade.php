@@ -62,7 +62,7 @@
 
         <input type="hidden" name="restaurant_id" value="{{ $inputs['id'] }}" />
 
-        </div>
+        <div class="mt-4">
             <button 
                 type="submit"
                 name="action"

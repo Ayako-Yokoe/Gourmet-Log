@@ -58,6 +58,13 @@ Route::get('/categories', [CategoryController::class, 'index'])->name('categorie
 // Store newly created category
 Route::post('/categories/store', [CategoryController::class, 'store'])->name('categories.store');
 
+
+// Show edit form
+Route::post('/categories/{id}/edit', [CategoryController::class, 'edit']);
+
+// Update category
+Route::put('/categories/{id}', [CategoryController::class, 'update']);
+
 // Delete category
 Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 

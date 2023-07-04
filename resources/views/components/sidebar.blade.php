@@ -7,7 +7,7 @@
             <li class="py-2 border-t-2 border-b-2 border-white">MENU</li>
             <li class="py-6"><a href="/restaurants">Restaurant List</a></li>
             <li class="py-6"><a href="/restaurants/create">Create/Edit Restaurant</a></li>
-            <li class="py-6"><a href="/categories">Manage Categoriesa</a></li>
+            <li class="py-6"><a href="/categories">Manage Categories</a></li>
         </ul>
         <div class="mt-auto py-6">
             <form>User</form>
