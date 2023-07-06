@@ -20,4 +20,8 @@ class Restaurant extends Model
         'phone_number', 
         'comment'
     ];
+
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
 }

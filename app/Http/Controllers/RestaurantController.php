@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -46,7 +47,9 @@ class RestaurantController extends Controller
 
     // Show create form
     public function create(){
-        return view('restaurants.create');
+        $categories = Category::all();
+
+        return view('restaurants.create', ['categories' => $categories]);
     }
 
 
@@ -56,12 +59,13 @@ class RestaurantController extends Controller
         // 'category' => ['required_without_all:' . implode(',', $dynamicCategories)],
 
         // Hard-coded for now
-        $dynamicCategories = ['category1', 'category2', 'category3'];
-
+        // $dynamicCategories = ['category1', 'category2', 'category3'];
+        
         $request->validate([
             'name' => ['required', 'max:20', 'string'],
             'name_katakana' => ['required', 'regex:/^[ア-ン゛゜ァ-ォャ-ョー]+$/u'],
-            'categories' => ['required', 'array', 'required_without_all:' . implode(',', $dynamicCategories)],
+            'categories' => ['required', 'array'],
+            'categories.*' => ['exists:categories,id'],
             'review' => ['required', 'numeric', 'min:1', 'max:5'],
             // 'phone_number' => 'integer',
             'comment' => ['required', 'max:300'],
@@ -124,8 +128,8 @@ class RestaurantController extends Controller
         $validatedData = $request->validate([
             'name' => ['required', 'max:20', 'string'],
             'name_katakana' => ['required', 'regex:/^[ア-ン゛゜ァ-ォャ-ョー]+$/u'],
-            // 'categories' => ['required', 'array', 'required_without_all:' . implode(',', $dynamicCategories)],
-            //'categories' => ['required', 'array'],
+            'categories' => ['required', 'array'],
+            'categories.*' => ['exists:categories,id'],
             'review' => ['required', 'numeric', 'min:1', 'max:5'],
             // 'phone_number' => 'integer',
             $phoneNumberAsInteger => 'integer',
