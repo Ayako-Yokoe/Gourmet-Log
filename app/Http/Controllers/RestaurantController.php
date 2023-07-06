@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 
 class RestaurantController extends Controller
@@ -67,11 +68,29 @@ class RestaurantController extends Controller
             'food_picture' => ['nullable', 'image']
         ]);
 
+        // Category
         $categories = $request->input('categories', []);
         $categoryString = implode(',', $categories);
 
+        // Map URL
+        $iframeCode = $request->input('map_url');
+        preg_match('/src="([^"]+)"/', $iframeCode, $matches);
+        $srcPart = count($matches) > 1 ? $matches[1] : $iframeCode;
+
+        // Upload food image
+        if($request->hasFile('food_picture')){
+            $photo = $request->file('food_picture');
+            $photoPath = $photo->store('photos', 'public');
+            $photoUrl = Storage::disk('public')->url($photoPath);
+        } else {
+            $photoUrl = null;
+        }
+
+
         $formFields = $request->all();
         $formFields['categories'] = $categoryString;
+        $formFields['map_url'] = $srcPart;
+        $formFields['food_picture'] = $photoUrl;
 
         $formFields['id'] = $request->input('restaurant_id');
 
@@ -101,6 +120,7 @@ class RestaurantController extends Controller
         $phoneNumber = str_replace('-', '', $request->input('phone_number'));
         $phoneNumberAsInteger = (int) $phoneNumber;
 
+
         $validatedData = $request->validate([
             'name' => ['required', 'max:20', 'string'],
             'name_katakana' => ['required', 'regex:/^[ア-ン゛゜ァ-ォャ-ョー]+$/u'],
@@ -110,12 +130,22 @@ class RestaurantController extends Controller
             // 'phone_number' => 'integer',
             $phoneNumberAsInteger => 'integer',
             'comment' => ['required', 'max:300'],
-            //'food_picture' => ['nullable', 'image']
+            'food_picture' => ['nullable', 'url']
         ]);
 
 
         $action = $request->input('action');
         $formFields = $request->except('action');
+
+
+        // Upload food image
+        if($request->hasFile('food_picture')){
+            $photo = $request->file('food_picture');
+            $photoPath = $photo->store('photos', 'public');
+            $photoUrl = Storage::disk('public')->url($photoPath);
+        } else {
+            $photoUrl = null;
+        }
 
         //$formFields['phone_number'] = $phoneNumberAsInteger;
 
@@ -132,8 +162,7 @@ class RestaurantController extends Controller
             } else {
                 // Change this "nullable is not working"
                 $formFields['user_id'] = 0;
-                $formFields['food_picture'] = "https://via.placeholder.com/150x150.png/003399?text=food+et";
-                $formFields['map_url'] = "http://schimmel.com/";
+                $formFields['food_picture'] = $photoUrl;
                 $formFields['phone_number'] = $phoneNumberAsInteger;
 
                 // Create a new restaurant
@@ -146,6 +175,8 @@ class RestaurantController extends Controller
             // Return to the create page with input
             $phoneNumber = formatPhoneNumber($phoneNumberAsInteger);
             $formFields['phone_number'] = $phoneNumber;
+
+            $formFields['food_photo'] = $photoUrl;
 
             return redirect()->route('restaurants.create')->withInput($formFields);
         }

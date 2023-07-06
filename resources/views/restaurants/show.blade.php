@@ -22,12 +22,24 @@
 
     <div class="my-4">
         <h3>Picture: </h3>
-        <img src={{ $restaurant->food_picture }} alt="picture of the food" />
+        <img 
+            src={{ $restaurant->food_picture }} 
+            alt="picture of the food"
+            class="w-full h-52 object-cover"
+        />
     </div>
 
     <div class="my-4">
         <h3>Google Map URL: </h3>
-        <a>{{ $restaurant->map_url }}</a>
+        {{-- <a>{{ $restaurant->map_url }}</a> --}}
+        <iframe
+            width="280"
+            height="208"
+            frameborder="0"
+            style="border:0"
+            src="{{ $restaurant->map_url }}"
+            alt="google map"
+        ></iframe>
     </div>
 
     <div class="my-4">

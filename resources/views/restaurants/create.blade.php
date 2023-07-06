@@ -10,7 +10,7 @@
 
         {{-- <form method="POST" action="{{ $restaurant->id ? route('restaurants.store') : route('restaurants.confirm') }}"> --}}
 
-        <form method="POST" action="{{ route('restaurants.confirm') }}">
+        <form method="POST" action="{{ route('restaurants.confirm') }}" enctype="multipart/form-data">
             @csrf
 
             {{-- <p>id: {{ $restaurant->id }}</p> --}}
@@ -99,7 +99,7 @@
             <div>
                 <label for="map_url">Google Map URL</label><br>
                 <input 
-                    type="url" 
+                    type="text" 
                     name="map_url" 
                     value="{{ $restaurant->map_url ?? old('map_url')}}"
                     class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-3/4"
