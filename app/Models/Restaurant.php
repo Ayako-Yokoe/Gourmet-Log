@@ -3,8 +3,9 @@
 namespace App\Models;
 
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Restaurant extends Model
 {
@@ -21,7 +22,11 @@ class Restaurant extends Model
         'comment'
     ];
 
-    public function category(){
-        return $this->belongsTo(Category::class);
+    // public function categories(){
+    //     return $this->belongsToMany('App\Models\Category', 'category_tags', 'category_id', 'restaurant_id');
+    // }
+
+    public function categories(){
+        return $this->belongsToMany(Category::class, 'category_tags');
     }
 }

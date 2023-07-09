@@ -56,11 +56,6 @@ class RestaurantController extends Controller
     // Pass input data to confirmation page
     public function confirm(Request $request){
 
-        // 'category' => ['required_without_all:' . implode(',', $dynamicCategories)],
-
-        // Hard-coded for now
-        // $dynamicCategories = ['category1', 'category2', 'category3'];
-        
         $request->validate([
             'name' => ['required', 'max:20', 'string'],
             'name_katakana' => ['required', 'regex:/^[ア-ン゛゜ァ-ォャ-ョー]+$/u'],
@@ -72,9 +67,19 @@ class RestaurantController extends Controller
             'food_picture' => ['nullable', 'image']
         ]);
 
-        // Category
-        $categories = $request->input('categories', []);
-        $categoryString = implode(',', $categories);
+        // Category ID
+        $categories = $request->input('categories', []);  // [1, 2, 3]
+        // $categoryString = implode(',', $categories);
+
+        // Category Value
+        // $categories = Category::whereIn('id', explode(',', $categoryString))->get();
+        $findcategories = Category::whereIn('id', $categories)->get();
+        $categoryValues = $findcategories->pluck('name'); 
+            //     items: array:3 [▶
+            //     0 => "日本料理"
+            //     1 => "インド料理"
+            //     2 => "韓国料理"
+            //   ]
 
         // Map URL
         $iframeCode = $request->input('map_url');
@@ -92,33 +97,21 @@ class RestaurantController extends Controller
 
 
         $formFields = $request->all();
-        $formFields['categories'] = $categoryString;
+        //$formFields['categories'] = $categoryString;
         $formFields['map_url'] = $srcPart;
         $formFields['food_picture'] = $photoUrl;
-
         $formFields['id'] = $request->input('restaurant_id');
 
         return view('restaurants.confirm', [
-            'inputs' => $formFields
+            'inputs' => $formFields,
+            'categoryValues' => $categoryValues
         ]);
     }
 
 
-    // Handle category later
+
     // Store new restaurant data
     public function store(Request $request){
-
-        // 'category' => ['required_without_all:' . implode(',', $dynamicCategories)],
-
-        // Hard-coded for now
-        // $dynamicCategories = ['category1', 'category2', 'category3'];
-
-        // $categories = $request->input('categories', []);
-        // $categoryString = implode(',', $categories);
-
-        // $request->merge([
-        //     'categories' => $categoryString
-        // ]);
 
         // Remove hyphens from phone number
         $phoneNumber = str_replace('-', '', $request->input('phone_number'));
@@ -128,7 +121,7 @@ class RestaurantController extends Controller
         $validatedData = $request->validate([
             'name' => ['required', 'max:20', 'string'],
             'name_katakana' => ['required', 'regex:/^[ア-ン゛゜ァ-ォャ-ョー]+$/u'],
-            'categories' => ['required', 'array'],
+            'categories' => ['required'],
             'categories.*' => ['exists:categories,id'],
             'review' => ['required', 'numeric', 'min:1', 'max:5'],
             // 'phone_number' => 'integer',
@@ -151,9 +144,16 @@ class RestaurantController extends Controller
             $photoUrl = null;
         }
 
+        // Convert categories to an array
+        $categoriesArray = $request->input('categories', []);
+
         //$formFields['phone_number'] = $phoneNumberAsInteger;
 
         if($action === 'submit'){
+
+            // Once handling the user_id, change this.
+            // Use updateOrCreate
+
             // Update or create new restaurant data
             $restaurantId = $request->input('id');
             $existingRestaurant = Restaurant::find($restaurantId);
@@ -161,16 +161,25 @@ class RestaurantController extends Controller
             if($existingRestaurant){          
                 // Update the existing restaurant
                 $restaurant = Restaurant::find($restaurantId);
+
+                // categoriesArray in nor stored if using $validatedData
                 $restaurant->update($validatedData);
 
             } else {
-                // Change this "nullable is not working"
+                // Change this. "nullable is not working"
                 $formFields['user_id'] = 0;
                 $formFields['food_picture'] = $photoUrl;
                 $formFields['phone_number'] = $phoneNumberAsInteger;
+                $formFields['categories'] = $categoriesArray;
 
                 // Create a new restaurant
-                Restaurant::create($formFields);  
+                // Restaurant::create($formFields);  
+                $newRestaurant = Restaurant::create($formFields); 
+
+                // Category_Tag
+                $restaurant = Restaurant::find($newRestaurant->id);
+                $restaurant->categories()->sync($categoriesArray);
+
             }   
 
             return redirect()->route('restaurants.index'); 

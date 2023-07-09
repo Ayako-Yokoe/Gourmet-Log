@@ -50,6 +50,8 @@
             <div>                                                                               
                 <span>Category</span><br>
 
+                {{-- When coming from Edit button, we don't have $categories --}}
+
                 @foreach ($categories as $category)
                     <input type="checkbox" id="category{{ $category->id }}" name="categories[]" value="{{ $category->id }}" />
                     <label for="category{{ $category->id }}">{{ $category->name }}</label>

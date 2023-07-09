@@ -25,8 +25,18 @@
 
         <div>
             <label>Category:</label>
-            <input type="checkbox" name="categories" value="{{ $inputs['categories'] }}" checked disabled />
+            {{-- <input type="checkbox" name="categories[]" value="{{ $inputs['categories'] }}" checked disabled />
             {{ $inputs['categories'] }}
+            {{ $categoryValues }} --}}
+
+            @foreach ($inputs['categories'] as $category)
+                <input type="hidden" name="categories[]" value="{{ $category }}" />
+            @endforeach
+
+            @foreach ($categoryValues as $categoryValue)
+                {{-- <input type="checkbox" name="categories[]" value="{{ $categoryValue }}" checked disabled /> --}}
+                {{ $categoryValue }}
+            @endforeach
         </div>
 
         <div>

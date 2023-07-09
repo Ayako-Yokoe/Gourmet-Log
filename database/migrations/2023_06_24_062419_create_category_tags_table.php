@@ -13,9 +13,13 @@ return new class extends Migration
     {
         Schema::create('category_tags', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('restaurant_id');
-            $table->bigInteger('category_id');
+            $table->unsignedBigInteger('restaurant_id');
+            $table->unsignedBigInteger('category_id');
             $table->timestamps();
+            $table->primary(['restaurant_id', 'category_id']);
+
+            $table->foreign('restaurant_id')->references('id')->on('restaurants');
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
