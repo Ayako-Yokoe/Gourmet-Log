@@ -12,7 +12,9 @@
     <div class="flex justify-between my-4">
         <div>
             <h3>Category:</h3>
-            <p>Japanese</p>
+            @foreach ($categories as $category)
+                {{ $category->name }}
+            @endforeach
         </div>
         <div>
             <h3>Review:</h3> 

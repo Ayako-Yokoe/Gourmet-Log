@@ -53,7 +53,13 @@
                 <tr class="px-4">
                     <td class="border border-slate-300">{{ $restaurant->id }}</td>
                     <td class="border border-slate-300">{{ $restaurant->name }}</td>
-                    <td class="border border-slate-300">category</td>
+                    <td class="border border-slate-300">
+
+                        {{-- Add Comma --}}
+                        @foreach ($restaurant->categories as $category)
+                            {{ $category->name }}
+                        @endforeach
+                    </td>
                     <td class="border border-slate-300">{{ $restaurant->review }}</td>
                     <td class="border border-slate-300">{{ $restaurant->comment }}</td>
 

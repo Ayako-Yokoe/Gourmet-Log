@@ -46,23 +46,16 @@
                 <p class="text-red-500 text-xs mt-1">{{$message}}</p>
             @enderror
 
-            {{-- Checked for the old value didn't work --}}
             <div>                                                                               
                 <span>Category</span><br>
 
-                {{-- When coming from Edit button, we don't have $categories --}}
-
                 @foreach ($categories as $category)
-                    <input type="checkbox" id="category{{ $category->id }}" name="categories[]" value="{{ $category->id }}" />
+                    <input type="checkbox" id="category{{ $category->id }}" name="categories[]" value="{{ $category->id }}"
+                    @if (isset($selectedCategoryIds) && in_array($category->id, $selectedCategoryIds) || in_array($category->id, old('categories', []))) checked @endif
+                    />
                     <label for="category{{ $category->id }}">{{ $category->name }}</label>
                 @endforeach
     
-                {{-- <input type="checkbox" id="category1" name="categories[]" value="Japanese" @if (in_array('Japanese', (array) ($restaurant->categories ?? old('categories', [])))) checked @endif />
-                <label for="category1">Japanese</label>
-                <input type="checkbox" id="category2" name="categories[]" value="Chinese" @if (in_array('Chinese', (array) ($restaurant->categories ?? old('categories', [])))) checked @endif />
-                <label for="category2">Chinese</label>
-                <input type="checkbox" id="category3" name="categories[]" value="French" @if (in_array('French', (array) ($restaurant->categories ?? old('categories', [])))) checked @endif />
-                <label for="category3">French</label> --}}
             </div>
 
             @error('categories')
