@@ -8,7 +8,7 @@
     <form method="POST" action="{{ route('restaurants.store') }}">
         @csrf
 
-        <p>id: {{ $inputs['id'] }}</p>
+        {{-- <p>id: {{ $inputs['id'] }}</p> --}}
         <input type="hidden" name="id" value="{{ $inputs['id'] }}" />
 
         <div>
@@ -43,14 +43,23 @@
 
         <div>
             <label>Picture:</label>
-            {{ $inputs['food_picture'] }}
+            <img src="{{ $inputs['food_picture'] }}" alt="food photo" />
+
             <input type="hidden" name="food_picture" value="{{ $inputs['food_picture'] }}" />
             {{-- <input type="hidden" name="food_picture" value="https://via.placeholder.com/150x150.png/003399?text=food+et" /> --}}
         </div>
 
         <div>
             <label>Google Map URL:</label>
-            {{ $inputs['map_url'] }}
+            <iframe
+                width="280"
+                height="208"
+                frameborder="0"
+                style="border:0"
+                src="{{ $inputs['map_url'] }}"
+                alt="google map"
+            ></iframe>
+
             <input type="hidden" name="map_url" value="{{ $inputs['map_url'] }}" />
         </div>
 

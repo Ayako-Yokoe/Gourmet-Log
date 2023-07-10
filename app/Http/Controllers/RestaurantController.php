@@ -127,10 +127,8 @@ class RestaurantController extends Controller
         $formFields = $request->except('action');
 
         // Upload food image
-        if($request->hasFile('food_picture')){
-            $photo = $request->file('food_picture');
-            $photoPath = $photo->store('photos', 'public');
-            $photoUrl = Storage::disk('public')->url($photoPath);
+        if($request->input('food_picture')){
+            $photoUrl = $request->input('food_picture');
         } else {
             $photoUrl = null;
         }

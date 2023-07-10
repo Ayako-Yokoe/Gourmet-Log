@@ -64,17 +64,17 @@
 
             <div>
                 <label for="review">Review (Max: 5/ Min: 1)</label><br>
-                <select 
-                    name="review" 
+                <select
+                    name="review"
                     required
                     class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-3/4"
                 >
-                    <option value="" selected>{{ $restaurant->review ?? "" }}</option>
-                    <option value="5" @if(old('review') == '5') selected @endif>5</option>
-                    <option value="4" @if(old('review') == '4') selected @endif>4</option>
-                    <option value="3" @if(old('review') == '3') selected @endif>3</option>
-                    <option value="2" @if(old('review') == '2') selected @endif>2</option>
-                    <option value="1" @if(old('review') == '1') selected @endif>1</option>
+                    <option value=""></option>
+                    <option value="5" {{ (old('review') == '5' || (isset($restaurant) && $restaurant->review == '5')) ? 'selected' : '' }}>5</option>
+                    <option value="4" {{ (old('review') == '4' || (isset($restaurant) && $restaurant->review == '4')) ? 'selected' : '' }}>4</option>
+                    <option value="3" {{ (old('review') == '3' || (isset($restaurant) && $restaurant->review == '3')) ? 'selected' : '' }}>3</option>
+                    <option value="2" {{ (old('review') == '2' || (isset($restaurant) && $restaurant->review == '2')) ? 'selected' : '' }}>2</option>
+                    <option value="1" {{ (old('review') == '1' || (isset($restaurant) && $restaurant->review == '1')) ? 'selected' : '' }}>1</option>
                 </select>
             </div>
 
@@ -83,13 +83,16 @@
             @enderror
 
             <div>
-                <label>Photo of Food</label><br>
+                <label for="food_picture">Photo of Food</label><br>
                 <input 
                     type="file" 
                     name="food_picture"
-                    value="{{ $restaurant->food_picture ?? old('food_picture')}}"
+                    {{-- value="{{ $restaurant->food_picture ?? old('food_picture')}}" --}}
                     {{-- value="https://via.placeholder.com/150x150.png/003399?text=food+et" --}}
                     />
+                @if (isset($restaurant) && !$errors->has('food_picture') && $restaurant->food_picture)
+                    {{ $restaurant->food_picture}}
+                @endif
             </div>
 
             @error('food_picture')
