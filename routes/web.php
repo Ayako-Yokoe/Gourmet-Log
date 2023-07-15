@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RestaurantController;
 
@@ -16,7 +17,12 @@ use App\Http\Controllers\RestaurantController;
 */
 
 Route::get('/', function () {
-    return view('components.layout');
+    return view('landing');
+});
+
+// Dashboard
+Route::get('/dashboard', function(){
+    return view('dashboard');
 });
 
 
@@ -68,3 +74,21 @@ Route::put('/categories/{id}', [CategoryController::class, 'update']);
 // Delete category
 Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
+
+
+
+// Register/Login
+// Show Register Form
+Route::get('/register', [UserController::class, 'create']);
+
+// Create New User
+Route::post('/users', [UserController::class, 'store'])->name('users');
+
+// Logout
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth');
+
+// Show Login Form
+Route::get('/login', [UserController::class, 'login'])->name('users.index');
+
+// Login User
+Route::post('/users/authenticate', [UserController::class, 'authenticate'])->name('users.authenticate');

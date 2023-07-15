@@ -4,7 +4,7 @@
 
 {{-- @unless (count($restaurants == 0)) --}}
 
-<div class="w-10/12 mx-auto mt-20">
+<div class="w-8/12 mx-auto mt-20">
     <h1 class="text-lg font-bold my-4">Restaurant List</h1> 
     
     {{-- Search Restaurant --}}

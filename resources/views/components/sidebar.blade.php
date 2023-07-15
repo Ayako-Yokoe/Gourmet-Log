@@ -10,7 +10,11 @@
             <li class="py-6"><a href="/categories">Manage Categories</a></li>
         </ul>
         <div class="mt-auto py-6">
-            <form>User</form>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+
+                <button type="submit" class="hover:text-teal-700">{{ $userName }}</button>
+            </form>
         </div>
     </nav>
 </div>

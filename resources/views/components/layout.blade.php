@@ -10,21 +10,20 @@
 
     <title>Gourmet Log</title>
 </head>
-<body class="flex">
-    {{-- @auth --}}
-        @include('components.sidebar')
-    {{-- @else --}}
-        {{-- @include('components.navbar') --}}
-    {{-- @endauth --}}
+<body>
+    <main>
+        {{-- @auth
+            <div class="flex">
+                @include('components.sidebar', ['userName' => Auth::user()->name])
+                @yield('main')
+            </div>
+        @else --}}
 
-{{-- 
-    may need to change the flex or by auth --}}
-    <main class="flex-1">
-        <div>
-        {{-- <h1>Hello</h1>  --}}
-        @yield('main')
+        <div class="flex flex-col h-screen">
+            @include('components.navbar')
+            @yield('main')
         </div>
-
+        {{-- @endauth --}}
     </main>
 </body>
 </html>
