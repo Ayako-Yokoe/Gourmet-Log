@@ -37,7 +37,7 @@ class UserController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('users.login');
+        return redirect()->route('landing');
     }
 
     // Show Login Form

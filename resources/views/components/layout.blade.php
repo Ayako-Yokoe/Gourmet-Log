@@ -12,18 +12,18 @@
 </head>
 <body>
     <main>
-        {{-- @auth
+        @auth
             <div class="flex">
                 @include('components.sidebar', ['userName' => Auth::user()->name])
                 @yield('main')
             </div>
-        @else --}}
+        @else
 
         <div class="flex flex-col h-screen">
             @include('components.navbar')
             @yield('main')
         </div>
-        {{-- @endauth --}}
+        @endauth
     </main>
 </body>
 </html>

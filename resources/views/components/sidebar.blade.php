@@ -1,6 +1,6 @@
 <div class="w-1/6 h-screen bg-teal-400">
     <nav class="flex flex-col h-full text-white text-center">
-        <a href="/" class="px-4 pt-6 pb-10">
+        <a href="/dashboard" class="px-4 pt-6 pb-10">
             <span class="text-lg">Gourmet Log</span>
         </a>
         <ul>
@@ -13,7 +13,7 @@
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
 
-                <button type="submit" class="hover:text-teal-700">{{ $userName }}</button>
+                <button type="submit" class="cursor-pointer hover:text-teal-700">{{ $userName }}</button>
             </form>
         </div>
     </nav>

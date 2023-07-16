@@ -5,24 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 
 class RestaurantController extends Controller
+
 {
     // Show all restaurants
     public function index(Request $request){
 
+        $user = Auth::user();
+        $restaurantsByUser = $user->restaurants()->orderBy('id', 'asc')->get();
+
         if($request->filled('search')){
             $search = $request->input('search');
 
-            $restaurants = Restaurant::where('name', 'LIKE', "%{$search}%")
+            // $restaurants = Restaurant::where('name', 'LIKE', "%{$search}%")
+            $restaurants = $restaurantsByUser->where('name', 'LIKE', "%{$search}%")
             ->orWhere('name_katakana', 'LIKE', "%{$search}%")
             ->orWhere('comment', 'LIKE', "%{$search}%")
             ->paginate(10);
 
         } else {
-            $restaurants = Restaurant::paginate(10);
+            $restaurants = $user->restaurants()->orderBy('id', 'asc')->paginate(10);
         }
 
         // Format phone number
@@ -34,10 +40,14 @@ class RestaurantController extends Controller
         return view('restaurants.index', ['restaurants' => $restaurants]);
     }
 
-
     // Show single restaurant
     public function show($id){
-        $restaurant = Restaurant::findOrFail($id);
+
+        $user = Auth::user();
+
+        // $restaurant = Restaurant::findOrFail($id);
+        $restaurant = $user->restaurants()->findOrFail($id);
+
         $phoneNumber = formatPhoneNumber($restaurant['phone_number']);
         $restaurant['phone_number'] = $phoneNumber;
 
@@ -116,62 +126,42 @@ class RestaurantController extends Controller
             'categories' => ['required'],
             'categories.*' => ['exists:categories,id'],
             'review' => ['required', 'numeric', 'min:1', 'max:5'],
-            // 'phone_number' => 'integer',
             $phoneNumberAsInteger => 'integer',
             'comment' => ['required', 'max:300'],
             'food_picture' => ['nullable', 'url']
         ]);
 
-
         $action = $request->input('action');
-        $formFields = $request->except('action');
-
-        // Upload food image
-        if($request->input('food_picture')){
-            $photoUrl = $request->input('food_picture');
-        } else {
-            $photoUrl = null;
-        }
 
         // Convert categories to an array
         $categoriesArray = $request->input('categories', []);
+        
 
-        //$formFields['phone_number'] = $phoneNumberAsInteger;
+        // Upload food image
+        // if($request->input('food_picture')){
+        //     $photoUrl = $request->input('food_picture');
+        // } else {
+        //     $photoUrl = null;
+        // }
+
 
         if($action === 'submit'){
 
             // Once handling the user_id, change this.
-            // Use updateOrCreate
 
             // Update or create new restaurant data
-            $restaurantId = $request->input('id');
-            $existingRestaurant = Restaurant::find($restaurantId);
+            $restaurant = Restaurant::updateOrCreate(
+                ['id' => $request->input('id')],
+                [
+                    'name' => $validatedData['name'],
+                    'name_katakana' => $validatedData['name_katakana'],
+                    'review' => $validatedData['review'],
+                    'phone_number' => $phoneNumberAsInteger,
+                    'food_picture' => $request->input('food_picture') ?: null
+                ]
+                );
 
-            if($existingRestaurant){          
-                // Update the existing restaurant
-                $existingRestaurant->update($validatedData);
-                $existingRestaurant->food_picture = $photoUrl;
-                $existingRestaurant->categories()->sync($formFields['categories']);
-
-                // $restaurant = Restaurant::find($restaurantId);
-                // $restaurant->update($validatedData);
-                // // Category_Tag
-                // $restaurant->categories()->sync($categoriesArray);
-
-
-            } else {
-                // Change this. "nullable is not working"
-                $formFields['user_id'] = 0;
-                $formFields['food_picture'] = $photoUrl;
-                $formFields['phone_number'] = $phoneNumberAsInteger;
-
-                // Create a new restaurant
-                $newRestaurant = Restaurant::create($formFields); 
-
-                // Category_Tag
-                $newRestaurant->categories()->sync($formFields['categories']);
-
-            }   
+            $restaurant->categories()->sync($categoriesArray);
 
             return redirect()->route('restaurants.index'); 
 
@@ -179,9 +169,7 @@ class RestaurantController extends Controller
             // Return to the create page with input
             $phoneNumber = formatPhoneNumber($phoneNumberAsInteger);
             $formFields['phone_number'] = $phoneNumber;
-
             $formFields['food_photo'] = $photoUrl;
-
 
             // Retrieve category IDs from the input
             $selectedCategoryIds = $request->input('categories', []);
@@ -191,6 +179,9 @@ class RestaurantController extends Controller
             return redirect()->route("restaurants.create")->withInput();
         }
     }
+
+
+    // START FROM HERE and the user_id ABOVE
 
     // Show edit form
     public function edit($id){
