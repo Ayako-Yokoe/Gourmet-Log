@@ -20,7 +20,11 @@ use App\Http\Controllers\RestaurantController;
 Route::get('/', fn () => view('landing'))->name('landing');
 
 // Dashboard
-Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard')->middleware('auth');
+Route::get('/dashboard', function () {
+    // $date = new Date('md');
+    $userName = Auth::user()->name;
+    return view('dashboard', ['userName' => $userName, 'date' => $date]);
+})->name('dashboard')->middleware('auth');
 
 
 // Restaurants

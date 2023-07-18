@@ -90,9 +90,10 @@
                     {{-- value="{{ $restaurant->food_picture ?? old('food_picture')}}" --}}
                     {{-- value="https://via.placeholder.com/150x150.png/003399?text=food+et" --}}
                     />
+            {{-- <br>
                 @if (isset($restaurant) && !$errors->has('food_picture') && $restaurant->food_picture)
                     {{ $restaurant->food_picture}}
-                @endif
+                @endif --}}
             </div>
 
             @error('food_picture')

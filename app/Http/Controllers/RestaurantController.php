@@ -128,7 +128,8 @@ class RestaurantController extends Controller
             'review' => ['required', 'numeric', 'min:1', 'max:5'],
             $phoneNumberAsInteger => 'integer',
             'comment' => ['required', 'max:300'],
-            'food_picture' => ['nullable', 'url']
+            'food_picture' => ['nullable', 'url'],
+            'map_url' => ['nullable']
         ]);
 
         $action = $request->input('action');
@@ -147,17 +148,19 @@ class RestaurantController extends Controller
 
         if($action === 'submit'){
 
-            // Once handling the user_id, change this.
-
             // Update or create new restaurant data
             $restaurant = Restaurant::updateOrCreate(
                 ['id' => $request->input('id')],
-                [
+                [                    
+                    'user_id' => Auth::user()->id,
                     'name' => $validatedData['name'],
                     'name_katakana' => $validatedData['name_katakana'],
                     'review' => $validatedData['review'],
                     'phone_number' => $phoneNumberAsInteger,
-                    'food_picture' => $request->input('food_picture') ?: null
+                    'comment' => $validatedData['comment'],
+                    'food_picture' => $request->input('food_picture') ?: null,
+                    'map_url' => $request->input('map_url') ?: null,
+
                 ]
                 );
 
@@ -169,7 +172,7 @@ class RestaurantController extends Controller
             // Return to the create page with input
             $phoneNumber = formatPhoneNumber($phoneNumberAsInteger);
             $formFields['phone_number'] = $phoneNumber;
-            $formFields['food_photo'] = $photoUrl;
+            //$formFields['food_photo'] = $photoUrl;
 
             // Retrieve category IDs from the input
             $selectedCategoryIds = $request->input('categories', []);
@@ -180,13 +183,12 @@ class RestaurantController extends Controller
         }
     }
 
-
-    // START FROM HERE and the user_id ABOVE
-
     // Show edit form
     public function edit($id){
 
-        $restaurant = Restaurant::findOrFail($id);
+
+        $user = Auth::user();
+        $restaurant = $user->restaurants()->findOrFail($id);
 
         $phoneNumber = formatPhoneNumber($restaurant['phone_number']);
         $restaurant['phone_number'] = $phoneNumber;
@@ -206,7 +208,9 @@ class RestaurantController extends Controller
     // Delete restaurant
     public function destroy($id){
 
-        $restaurant = Restaurant::findOrFail($id);
+        $user = Auth::user();
+        $restaurant = $user->restaurants()->findOrFail($id);
+
         if($restaurant){
             $restaurant->delete();
         }

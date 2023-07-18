@@ -2,7 +2,7 @@
 
 @section('main')
 
-<div class="w-1/3 mx-auto mt-20">
+<div class="w-1/3 mx-auto mt-10">
     <h1 class="text-lg font-bold my-4">Confirmation Page</h1>
 
     <form method="POST" action="{{ route('restaurants.store') }}">
@@ -43,7 +43,11 @@
 
         <div>
             <label>Picture:</label>
-            <img src="{{ $inputs['food_picture'] }}" alt="food photo" />
+            <img 
+                src="{{ $inputs['food_picture'] }}" 
+                alt="food photo" 
+                class="w-64 h-48 object-cover"
+            />
 
             <input type="hidden" name="food_picture" value="{{ $inputs['food_picture'] }}" />
             {{-- <input type="hidden" name="food_picture" value="https://via.placeholder.com/150x150.png/003399?text=food+et" /> --}}
