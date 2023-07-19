@@ -15,11 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('restaurant_id');
             $table->unsignedBigInteger('category_id');
+            $table->softDeletes();
             $table->timestamps();
-            $table->primary(['restaurant_id', 'category_id']);
-
-            // Check this
-            $table->softDeletes($column = 'deleted_at', $precision = 0);
 
             $table->foreign('restaurant_id')->references('id')->on('restaurants');
             $table->foreign('category_id')->references('id')->on('categories');

@@ -4,20 +4,17 @@
 
 
 <div class="w-1/3 mx-auto mt-20">
-    <h1>Create/Edit Restaurant</h1>
+    <h1>お店　新規登録/編集</h1>
 
     <div>
-
-        {{-- <form method="POST" action="{{ $restaurant->id ? route('restaurants.store') : route('restaurants.confirm') }}"> --}}
 
         <form method="POST" action="{{ route('restaurants.confirm') }}" enctype="multipart/form-data">
             @csrf
 
-            {{-- <p>id: {{ $restaurant->id }}</p> --}}
             <input type="hidden" name="restaurant_id" value="{{ $restaurant?->id ?? null }}" />
 
             <div>
-                <label for="name">Name of Restaurant</label><br>
+                <label for="name">店名</label><br>
                 <input 
                     type="text" 
                     name="name" 
@@ -32,7 +29,7 @@
             @enderror
 
             <div>
-                <label for="name_katakana">Name of Restaurant Furigana</label><br>
+                <label for="name_katakana">店名　フリガナ</label><br>
                 <input 
                     type="text" 
                     name="name_katakana" 
@@ -47,7 +44,7 @@
             @enderror
 
             <div>                                                                               
-                <span>Category</span><br>
+                <span>カテゴリー</span><br>
 
                 @foreach ($categories as $category)
                     <input type="checkbox" id="category{{ $category->id }}" name="categories[]" value="{{ $category->id }}"
@@ -63,7 +60,7 @@
             @enderror
 
             <div>
-                <label for="review">Review (Max: 5/ Min: 1)</label><br>
+                <label for="review">レビュー（最高：５/ 最低：１）</label><br>
                 <select
                     name="review"
                     required
@@ -83,17 +80,11 @@
             @enderror
 
             <div>
-                <label for="food_picture">Photo of Food</label><br>
+                <label for="food_picture">料理写真</label><br>
                 <input 
                     type="file" 
                     name="food_picture"
-                    {{-- value="{{ $restaurant->food_picture ?? old('food_picture')}}" --}}
-                    {{-- value="https://via.placeholder.com/150x150.png/003399?text=food+et" --}}
-                    />
-            {{-- <br>
-                @if (isset($restaurant) && !$errors->has('food_picture') && $restaurant->food_picture)
-                    {{ $restaurant->food_picture}}
-                @endif --}}
+            />
             </div>
 
             @error('food_picture')
@@ -115,7 +106,7 @@
             @enderror
 
             <div>
-                <label for="phone_number">Phone Number</label><br>
+                <label for="phone_number">電話番号</label><br>
                 <input 
                     type="text" 
                     name="phone_number" 
@@ -130,7 +121,7 @@
             @enderror
 
             <div>
-                <label for="comment">Comment</label><br>
+                <label for="comment">コメント</label><br>
                 <input 
                     type="text" 
                     name="comment" 
@@ -148,7 +139,7 @@
                 type="submit"
                 class="border-2 border-gray-300 rounded-lg mt-6 px-2 py-1"
             >
-                To Confirmation Page
+                確認画面へ
             </button>
         </form>
     </div>

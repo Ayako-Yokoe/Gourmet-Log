@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('restaurants', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->default(0);
-            // $table->unsignedBigInteger('user_id')->default(0)->change();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->index();
             $table->string('name');
             $table->string('name_katakana');
             $table->integer('review');
@@ -22,7 +21,7 @@ return new class extends Migration
             $table->longText('map_url')->nullable();
             $table->bigInteger('phone_number')->nullable();
             $table->longText('comment');
-            $table->softDeletes('deleted_at');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

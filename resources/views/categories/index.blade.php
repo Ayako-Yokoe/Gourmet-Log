@@ -4,7 +4,7 @@
 
 <div class="w-3/5 mx-auto mt-20">
 
-    <h1 class="text-lg font-bold my-4">Manage Categories</h1>
+    <h1 class="text-lg font-bold my-4">カテゴリー管理</h1>
 
     {{-- Create New Category --}}
     <div class="my-4">
@@ -12,7 +12,7 @@
         <form method="POST" action="{{ route('categories.store') }}">
             @csrf
 
-            <label for="name">New Category</label><br>
+            <label for="name">新規カテゴリー</label><br>
             <input 
                 type="text" 
                 name="name" 
@@ -23,7 +23,7 @@
                 type="submit"
                 class="border border-gray-400 bg-gray-300 rounded-lg mt-2 px-2 py-1"
             >
-                Register
+                登録
             </button>
 
         </form>
@@ -41,9 +41,9 @@
             <thead>
                 <tr>
                     <th class="border border-slate-300 py-4 px-2">ID</th>
-                    <th class="border border-slate-300">Category</th>
-                    <th class="border border-slate-300">Edit</th>
-                    <th class="border border-slate-300">Delete</th>
+                    <th class="border border-slate-300">カテゴリー</th>
+                    <th class="border border-slate-300">編集</th>
+                    <th class="border border-slate-300">削除</th>
                 </tr>
             </thead>
 
@@ -72,7 +72,7 @@
                                         type="submit"
                                         class="border border-gray-400 bg-gray-300 rounded-lg mt-2 px-2 py-1"
                                     >
-                                        Save
+                                        登録
                                     </button>
                                 </form>
                             </td>
@@ -122,7 +122,7 @@
                             <form method="POST" action="/categories/{{ $category->id }}/edit">
                                 @csrf
                                 <button type="submit" class="bg-violet-700 text-white rounded-xl px-3 py-1 hover:text-violet-700 hover:bg-white border-2 border-violet-700">
-                                    Edit
+                                    編集
                                 </button>
                             </form>
                             
@@ -139,7 +139,7 @@
                                     class="bg-red-700 text-white rounded-xl px-3 py-1 hover:text-red-700 hover:bg-white border-2 border-red-700"
                                     onclick="return confirm('本当に削除してもよろしいですか？')"
                                 >
-                                    Delete
+                                    削除
                                 </button>
                             </form>
                         </td>

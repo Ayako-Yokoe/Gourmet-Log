@@ -21,15 +21,14 @@ Route::get('/', fn () => view('landing'))->name('landing');
 
 // Dashboard
 Route::get('/dashboard', function () {
-    // $date = new Date('md');
     $userName = Auth::user()->name;
-    return view('dashboard', ['userName' => $userName, 'date' => $date]);
+    return view('dashboard', ['userName' => $userName]);
 })->name('dashboard')->middleware('auth');
 
 
 // Restaurants
 // Show all restaurants
- Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index')->middleware('auth');
+Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index')->middleware('auth');
 
  // Store new restaurant data
 Route::post('/restaurants', [RestaurantController::class, 'store'])->name('restaurants.store')->middleware('auth');

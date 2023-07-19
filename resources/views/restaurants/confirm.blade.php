@@ -3,7 +3,7 @@
 @section('main')
 
 <div class="w-1/3 mx-auto mt-10">
-    <h1 class="text-lg font-bold my-4">Confirmation Page</h1>
+    <h1 class="text-lg font-bold my-4">新規登録　確認画面</h1>
 
     <form method="POST" action="{{ route('restaurants.store') }}">
         @csrf
@@ -12,19 +12,19 @@
         <input type="hidden" name="id" value="{{ $inputs['id'] }}" />
 
         <div>
-            <label>Name:</label>
+            <label>店名:</label>
             {{ $inputs['name'] }}
             <input type="hidden" name="name" value="{{ $inputs['name'] }}" />
         </div>
 
         <div>
-            <label>Furigana:</label>
+            <label>フリガナ:</label>
             {{ $inputs['name_katakana'] }}
             <input type="hidden" name="name_katakana" value="{{ $inputs['name_katakana'] }}" />
         </div>
 
         <div>
-            <label>Category:</label>
+            <label>カテゴリー:</label>
 
             @foreach ($inputs['categories'] as $category)
                 <input type="hidden" name="categories[]" value="{{ $category }}" />
@@ -36,13 +36,13 @@
         </div>
 
         <div>
-            <label>Review:</label>
+            <label>レビュー:</label>
             {{ $inputs['review'] }}
             <input type="hidden" name="review" value="{{ $inputs['review'] }}" />
         </div>
 
         <div>
-            <label>Picture:</label>
+            <label>料理写真:</label>
             <img 
                 src="{{ $inputs['food_picture'] }}" 
                 alt="food photo" 
@@ -68,13 +68,13 @@
         </div>
 
         <div>
-            <label>Phone Number:</label>
+            <label>電話番号:</label>
             {{ $inputs['phone_number'] }}
             <input type="hidden" name="phone_number" value="{{ $inputs['phone_number'] }}" />
         </div>
 
         <div>
-            <label>Comment:</label>
+            <label>コメント:</label>
             {{ $inputs['comment'] }}
             <input type="hidden" name="comment" value="{{ $inputs['comment'] }}" />
         </div>
@@ -88,7 +88,7 @@
                 value="edit"
                 class="border-2 border-gray-300 rounded-lg px-2 py-1"
             >
-                Edit
+                修正する
             </button>
             <button 
                 type="submit"
@@ -96,7 +96,7 @@
                 value="submit"
                 class="border-2 border-gray-300 rounded-lg px-2 py-1"
             >
-                Confirm
+                登録する
             </button>
         </div>
 
