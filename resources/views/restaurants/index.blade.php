@@ -4,7 +4,7 @@
 
 {{-- @unless (count($restaurants == 0)) --}}
 
-<div class="w-8/12 mx-auto mt-20 h-screen">
+<div class="w-8/12 mx-auto mt-20">
     <h1 class="text-lg font-bold my-4">お店リスト</h1> 
     
     {{-- Search Restaurant --}}
@@ -14,7 +14,7 @@
                 type="search"
                 name="search"
                 placeholder="ここに検索ワードを入力してください" 
-                class="border border-gray-300 rounded-lg mt-2 p-1 pl-2 w-1/3" 
+                class="border border-gray-300 outline-0 rounded-lg mt-2 p-1 pl-2 w-1/3" 
                 value="{{ request('search') }}"
                 />
             <button 
@@ -30,7 +30,9 @@
     <div>
 
         <div class="flex justify-end">
-            <p class="my-4 mr-2">1-10/50</p>
+            @if ($total > 0)
+                <p class="my-4 mr-2">{{ $from }}-{{ $to }}/{{ $total }}件</p>
+            @endif
         </div>
 
         <table class="table-auto w-full text-center">
@@ -54,14 +56,14 @@
                     <td class="border border-slate-300">{{ $restaurant->id }}</td>
                     <td class="border border-slate-300">{{ $restaurant->name }}</td>
                     <td class="border border-slate-300">
-
-                        {{-- Add Comma --}}
                         @foreach ($restaurant->categories as $category)
                             {{ $category->name }}
                         @endforeach
                     </td>
                     <td class="border border-slate-300">{{ $restaurant->review }}</td>
-                    <td class="border border-slate-300">{{ $restaurant->comment }}</td>
+                    <td class="border border-slate-300">
+                        {{ Str::limit($restaurant->comment, 18, '(...)') }}
+                    </td>
 
                     <td class="border border-slate-300">
                         <a href="/restaurants/{{ $restaurant->id }}">

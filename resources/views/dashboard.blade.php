@@ -2,7 +2,7 @@
 
 @section('main')
 
-<div class="w-1/3 mx-auto mt-20">
+<div class="w-2/3 mx-auto mt-20 text-lg">
     <p>{{ now()->format('m月d日') }}</p>
     <p>{{ $userName }}さん</p>
 </div>

@@ -3,8 +3,8 @@
 @section('main')
 
 
-<div class="w-1/3 mx-auto mt-20">
-    <h1>お店　新規登録/編集</h1>
+<div class="w-1/3 mx-auto mt-4 text-lg font-bold">
+    <h1 class="ml-8">お店　新規登録/編集</h1>
 
     <div>
         <form method="POST" action="{{ route('restaurants.confirm') }}" enctype="multipart/form-data">
@@ -12,8 +12,8 @@
 
             <input type="hidden" name="restaurant_id" value="{{ $restaurant?->id ?? null }}" />
 
-            <div>
-                <label for="name">店名</label><br>
+            <div class="mt-2">
+                <label for="name">店名<span class="text-red-500 ml-1">*</span></label><br>
                 <input 
                     type="text" 
                     name="name" 
@@ -27,8 +27,8 @@
                 <p class="text-red-500 text-xs mt-1">{{$message}}</p>
             @enderror
 
-            <div>
-                <label for="name_katakana">店名　フリガナ</label><br>
+            <div class="mt-2">
+                <label for="name_katakana">店名　フリガナ<span class="text-red-500 ml-1">*</span></label><br>
                 <input 
                     type="text" 
                     name="name_katakana" 
@@ -42,13 +42,13 @@
                 <p class="text-red-500 text-xs mt-1">{{$message}}</p>
             @enderror
 
-            <div>                                                                               
-                <span>カテゴリー</span><br>
+            <div class="mt-2">                                                                               
+                <span>カテゴリー</span><span class="text-red-500 ml-1">*</span><br>
                 @foreach ($categories as $category)
                     <input type="checkbox" id="category{{ $category->id }}" name="categories[]" value="{{ $category->id }}"
                     @if (isset($selectedCategoryIds) && in_array($category->id, $selectedCategoryIds) || in_array($category->id, old('categories', []))) checked @endif
                     />
-                    <label for="category{{ $category->id }}">{{ $category->name }}</label>
+                    <label for="category{{ $category->id }}"><span class="text-md font-normal">{{ $category->name }}</span></label>
                 @endforeach
             </div>
 
@@ -56,8 +56,8 @@
                 <p class="text-red-500 text-xs mt-1">{{$message}}</p>
             @enderror
 
-            <div>
-                <label for="review">レビュー（最高：５/ 最低：１）</label><br>
+            <div class="mt-2">
+                <label for="review">レビュー（最高：５/ 最低：１）<span class="text-red-500 ml-1">*</span></label><br>
                 <select
                     name="review"
                     required
@@ -76,7 +76,7 @@
                 <p class="text-red-500 text-xs mt-1">{{$message}}</p>
             @enderror
 
-            <div>
+            <div class="mt-2">
                 <label for="food_picture">料理写真</label><br>
                 <input 
                     type="file" 
@@ -88,7 +88,7 @@
                 <p class="text-red-500 text-xs mt-1">{{$message}}</p>
             @enderror
 
-            <div>
+            <div class="mt-2">
                 <label for="map_url">Google Map URL</label><br>
                 <input 
                     type="text" 
@@ -102,7 +102,7 @@
                 <p class="text-red-500 text-xs mt-1">{{$message}}</p>
             @enderror
 
-            <div>
+            <div class="mt-2">
                 <label for="phone_number">電話番号</label><br>
                 <input 
                     type="text" 
@@ -117,8 +117,8 @@
                 <p class="text-red-500 text-xs mt-1">{{$message}}</p>
             @enderror
 
-            <div>
-                <label for="comment">コメント</label><br>
+            <div class="mt-2">
+                <label for="comment">コメント<span class="text-red-500 ml-1">*</span></label><br>
                 <input 
                     type="text" 
                     name="comment" 
@@ -134,7 +134,7 @@
 
             <button 
                 type="submit"
-                class="border-2 border-gray-300 rounded-lg mt-6 px-2 py-1"
+                class="border-2 border-gray-300 rounded-lg mt-6 ml-8 px-8 py-1"
             >
                 確認画面へ
             </button>

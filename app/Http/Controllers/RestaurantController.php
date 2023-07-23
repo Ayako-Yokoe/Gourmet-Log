@@ -15,22 +15,24 @@ class RestaurantController extends Controller
 {
     // Show all restaurants
     public function index(Request $request){
-
         $user = Auth::user();
-        $restaurantsByUser = $user->restaurants()->orderBy('id', 'asc')->get();
+        $restaurantsQuery = Restaurant::where('user_id', $user->id)->orderBy('id', 'asc');
+    
+        $user = Auth::user();
+        $restaurantsQuery = Restaurant::where('user_id', $user->id)->orderBy('id', 'asc');
 
         if($request->filled('search')){
             $search = $request->input('search');
 
-            // $restaurants = Restaurant::where('name', 'LIKE', "%{$search}%")
-            $restaurants = $restaurantsByUser->where('name', 'LIKE', "%{$search}%")
-            ->orWhere('name_katakana', 'LIKE', "%{$search}%")
-            ->orWhere('comment', 'LIKE', "%{$search}%")
-            ->paginate(10);
-
-        } else {
-            $restaurants = $user->restaurants()->orderBy('id', 'asc')->paginate(10);
+            $restaurantsQuery->where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('name_katakana', 'LIKE', "%{$search}%")
+                ->orWhere('comment', 'LIKE', "%{$search}%");
+            });
         }
+            
+        $perPage = 10;
+        $restaurants = $restaurantsQuery->paginate($perPage);
 
         // Format phone number
         foreach ($restaurants as $restaurant){
@@ -38,7 +40,17 @@ class RestaurantController extends Controller
             $restaurant->phone_number = $phoneNumber;
         }
 
-        return view('restaurants.index', ['restaurants' => $restaurants]);
+        // Display Pages
+        $from = $restaurants->firstItem();
+        $to = $restaurants->lastItem();
+        $total = $restaurants->total();
+
+        return view('restaurants.index', [
+            'restaurants' => $restaurants,
+            'from' => $from,
+            'to' => $to,
+            'total' => $total
+        ]);
     }
 
     // Show single restaurant

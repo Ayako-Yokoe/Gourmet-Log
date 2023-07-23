@@ -32,7 +32,5 @@
 
 {{-- 
 To Do
-- Add astarisk to input field 
 - Error handling: 'max:10'etc
-- Categories <--> user ? not related
 --}}

@@ -10,11 +10,23 @@ class CategoryController extends Controller
     // Show create form and list of all categories
     public function index(){
         $isEditing = false;
-        $categories = Category::paginate(10);
+        //$categories = Category::paginate(10);
+
+        $perPage = 10;
+        $categories = Category::paginate($perPage);
+
+        // Display Pages
+        $from = $categories->firstItem();
+        $to = $categories->lastItem();
+        $total = $categories->total();
+
 
         return view('categories.index', [
             'categories' => $categories, 
             'isEditing' => $isEditing,
+            'from' => $from,
+            'to' => $to,
+            'total' => $total
         ]);
     }
 

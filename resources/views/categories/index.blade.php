@@ -2,12 +2,12 @@
 
 @section('main')
 
-<div class="w-3/5 mx-auto mt-20">
+<div class="w-3/5 mx-auto mt-10">
 
     <h1 class="text-lg font-bold my-4">カテゴリー管理</h1>
 
     {{-- Create New Category --}}
-    <div class="my-4">
+    <div class="my-2">
 
         <form method="POST" action="{{ route('categories.store') }}">
             @csrf
@@ -36,6 +36,11 @@
 
     {{-- List Table --}}
     <div>
+        <div class="flex justify-end">
+            @if ($total > 0)
+                <p class="my-2 mr-2">{{ $from }}-{{ $to }}/{{ $total }}件</p>
+            @endif
+        </div>
 
         <table class="table-auto w-full text-center">
             <thead>
@@ -106,7 +111,7 @@
             </tbody>
         </table>
 
-        <div class="my-4">
+        <div class="my-2">
             {{ $categories->render('components.pagination')}}
         </div>
     </div>
