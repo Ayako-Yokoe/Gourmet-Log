@@ -64,15 +64,15 @@ Route::get('/categories', [CategoryController::class, 'index'])->name('categorie
 // Store newly created category
 Route::post('/categories/store', [CategoryController::class, 'store'])->name('categories.store')->middleware('auth');
 
+// // Show edit form
+Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit')->middleware('auth');
 
-// Show edit form
-Route::post('/categories/{id}/edit', [CategoryController::class, 'edit'])->middleware('auth');
-
-// Update category
-Route::put('/categories/{id}', [CategoryController::class, 'update'])->middleware('auth');
+// // Update category
+Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update')->middleware('auth');
 
 // Delete category
-Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->middleware('auth');
+Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy')->middleware('auth');
+
 
 
 

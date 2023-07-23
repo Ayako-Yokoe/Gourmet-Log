@@ -9,21 +9,17 @@ class CategoryController extends Controller
 {    
     // Show create form and list of all categories
     public function index(){
-
         $isEditing = false;
-        //$editingCategoryId = null;
         $categories = Category::paginate(10);
 
         return view('categories.index', [
             'categories' => $categories, 
             'isEditing' => $isEditing,
-            //'editingCategoryId'=> $editingCategoryId
         ]);
     }
 
     // Store newly created category
     public function store(Request $request){
-
         $formField = $request->validate([
             'name' => ['required', 'string', 'max:10']
         ]);
@@ -37,7 +33,7 @@ class CategoryController extends Controller
     // Show edit form
     public function edit(Request $request, $id){
         $isEditing = true;
-        //$editingCategoryId = $request->input('editingCategoryId');
+        $editingCategoryId = $id;
         $categories = Category::paginate(10);
         $category = Category::findOrFail($id);
 
@@ -45,14 +41,12 @@ class CategoryController extends Controller
             'isEditing' => $isEditing,
             'categories' => $categories,
             'category' => $category,
-            //'editingCategoryId' => $editingCategoryId
+            'editingCategoryId' => $editingCategoryId
         ]);
     }
 
     // Update category
     public function update(Request $request, $id){
-        //$isEditing = false;
-
         $formField = $request->validate([
             'name' => ['required', 'string', 'max:10']
         ]);
@@ -62,7 +56,6 @@ class CategoryController extends Controller
 
         return redirect()->route('categories.index');
     }
-
 
     // Delete category
     public function destroy($id){

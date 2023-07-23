@@ -7,6 +7,7 @@ use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 
 class RestaurantController extends Controller
@@ -64,20 +65,20 @@ class RestaurantController extends Controller
         return view('restaurants.create', ['categories' => $categories]);
     }
 
-
     // Pass input data to confirmation page
     public function confirm(Request $request){
 
-        $request->validate([
-            'name' => ['required', 'max:20', 'string'],
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:20'],
             'name_katakana' => ['required', 'regex:/^[ア-ン゛゜ァ-ォャ-ョー]+$/u'],
-            'categories' => ['required', 'array'],
+            'categories' => ['required', 'array', 'checkbox_values'],
             'categories.*' => ['exists:categories,id'],
             'review' => ['required', 'numeric', 'min:1', 'max:5'],
-            // 'phone_number' => 'integer',
             'comment' => ['required', 'max:300'],
             'food_picture' => ['nullable', 'image']
         ]);
+
+        $validatedData = $validator->validated();
 
         // Category ID
         $categories = $request->input('categories', []);
@@ -100,18 +101,23 @@ class RestaurantController extends Controller
             $photoUrl = null;
         }
 
+        $mapUrl = $srcPart;
+        $foodPicture = $photoUrl;
+        $id = $request->input('restaurant_id');
+        $phoneNumber = $request->has('phone_number') ? $request->input('phone_number') : null;
 
-        $formFields = $request->all();
-        $formFields['map_url'] = $srcPart;
-        $formFields['food_picture'] = $photoUrl;
-        $formFields['id'] = $request->input('restaurant_id');
+        $formFields = array_merge($validatedData, [
+            'map_url' => $mapUrl,
+            'food_picture' => $foodPicture,
+            'id' => $id,
+            'phone_number' => $phoneNumber
+        ]);
 
         return view('restaurants.confirm', [
             'inputs' => $formFields,
             'categoryValues' => $categoryValues
         ]);
     }
-
 
     // Store new restaurant data
     public function store(Request $request){
@@ -121,9 +127,9 @@ class RestaurantController extends Controller
         $phoneNumberAsInteger = (int) $phoneNumber;
 
         $validatedData = $request->validate([
-            'name' => ['required', 'max:20', 'string'],
+            'name' => ['required', 'string', 'max:20'],
             'name_katakana' => ['required', 'regex:/^[ア-ン゛゜ァ-ォャ-ョー]+$/u'],
-            'categories' => ['required'],
+            'categories' => ['required', 'array', 'checkbox_values'],
             'categories.*' => ['exists:categories,id'],
             'review' => ['required', 'numeric', 'min:1', 'max:5'],
             $phoneNumberAsInteger => 'integer',
@@ -137,17 +143,8 @@ class RestaurantController extends Controller
         // Convert categories to an array
         $categoriesArray = $request->input('categories', []);
         
-
-        // Upload food image
-        // if($request->input('food_picture')){
-        //     $photoUrl = $request->input('food_picture');
-        // } else {
-        //     $photoUrl = null;
-        // }
-
-
+        // Store data or edit data
         if($action === 'submit'){
-
             // Update or create new restaurant data
             $restaurant = Restaurant::updateOrCreate(
                 ['id' => $request->input('id')],
@@ -160,7 +157,6 @@ class RestaurantController extends Controller
                     'comment' => $validatedData['comment'],
                     'food_picture' => $request->input('food_picture') ?: null,
                     'map_url' => $request->input('map_url') ?: null,
-
                 ]
                 );
 
@@ -172,10 +168,10 @@ class RestaurantController extends Controller
             // Return to the create page with input
             $phoneNumber = formatPhoneNumber($phoneNumberAsInteger);
             $formFields['phone_number'] = $phoneNumber;
-            //$formFields['food_photo'] = $photoUrl;
 
             // Retrieve category IDs from the input
             $selectedCategoryIds = $request->input('categories', []);
+
             // Al categories
             $categories = Category::all();
 
@@ -185,8 +181,6 @@ class RestaurantController extends Controller
 
     // Show edit form
     public function edit($id){
-
-
         $user = Auth::user();
         $restaurant = $user->restaurants()->findOrFail($id);
 
@@ -207,7 +201,6 @@ class RestaurantController extends Controller
 
     // Delete restaurant
     public function destroy($id){
-
         $user = Auth::user();
         $restaurant = $user->restaurants()->findOrFail($id);
 

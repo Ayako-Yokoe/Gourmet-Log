@@ -7,7 +7,6 @@
     <h1>お店　新規登録/編集</h1>
 
     <div>
-
         <form method="POST" action="{{ route('restaurants.confirm') }}" enctype="multipart/form-data">
             @csrf
 
@@ -45,14 +44,12 @@
 
             <div>                                                                               
                 <span>カテゴリー</span><br>
-
                 @foreach ($categories as $category)
                     <input type="checkbox" id="category{{ $category->id }}" name="categories[]" value="{{ $category->id }}"
                     @if (isset($selectedCategoryIds) && in_array($category->id, $selectedCategoryIds) || in_array($category->id, old('categories', []))) checked @endif
                     />
                     <label for="category{{ $category->id }}">{{ $category->name }}</label>
                 @endforeach
-    
             </div>
 
             @error('categories')
@@ -84,7 +81,7 @@
                 <input 
                     type="file" 
                     name="food_picture"
-            />
+                />
             </div>
 
             @error('food_picture')
