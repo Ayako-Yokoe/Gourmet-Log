@@ -8,7 +8,6 @@
     <form method="POST" action="{{ route('restaurants.store') }}">
         @csrf
 
-        {{-- <p>id: {{ $inputs['id'] }}</p> --}}
         <input type="hidden" name="id" value="{{ $inputs['id'] }}" />
 
         <div class="mt-2">
@@ -43,11 +42,15 @@
 
         <div class="mt-2">
             <label>料理写真:</label>
-            <img 
-                src="{{ $inputs['food_picture'] }}" 
-                alt="food photo" 
-                class="w-64 h-48 object-cover"
-            />
+            @if (!$inputs['food_picture'])
+                <p class="text-red-500 text-xs mt-1">選択された写真はありません。</p>
+            @else
+                <img 
+                    src="{{ $inputs['food_picture'] }}" 
+                    alt="food photo" 
+                    class="w-64 h-48 object-cover"
+                />
+            @endif
 
             <input type="hidden" name="food_picture" value="{{ $inputs['food_picture'] }}" />
         </div>

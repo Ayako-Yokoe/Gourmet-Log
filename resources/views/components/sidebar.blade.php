@@ -34,14 +34,3 @@
         </div>
     </nav>
 </div>
-
-
-
-{{-- 
-    <a> : href => route
-    <form> : @csrf + method=POST, action='/logout'
-
-    class: add hover, font size 
-    active: bg-white
-
---}}

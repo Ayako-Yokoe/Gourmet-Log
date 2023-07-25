@@ -16,68 +16,76 @@ use App\Http\Controllers\RestaurantController;
 |
 */
 
-// Landing Page
+/**
+ * Landing Page
+ */
 Route::get('/', fn () => view('landing'))->name('landing');
 
-// Dashboard
+/** 
+ * Dashboard
+*/
 Route::get('/dashboard', function () {
     $userName = Auth::user()->name;
     return view('dashboard', ['userName' => $userName]);
 })->name('dashboard')->middleware('auth');
 
+/**
+ * Restaurants
+ */
+Route::middleware('auth')->group(function() {
 
-// Restaurants
-// Show all restaurants
-Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index')->middleware('auth');
+    // Show all restaurants
+    Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants.index');
 
- // Store new restaurant data
-Route::post('/restaurants', [RestaurantController::class, 'store'])->name('restaurants.store')->middleware('auth');
+    // Store new restaurant data
+    Route::post('/restaurants', [RestaurantController::class, 'store'])->name('restaurants.store');
 
-// Show create form -- order matters
-Route::get('/restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create')->middleware('auth');
+    // Show create form -- order matters
+    Route::get('/restaurants/create', [RestaurantController::class, 'create'])->name('restaurants.create');
 
-// Show confirmation page
-Route::post('restaurants/confirm', [RestaurantController::class, 'confirm'])->name('restaurants.confirm')->middleware('auth');
+    // Show confirmation page
+    Route::post('restaurants/confirm', [RestaurantController::class, 'confirm'])->name('restaurants.confirm');
 
-// Edit before confirmation or store newly created restaurant
-Route::post('/restaurants/store', [RestaurantController::class, 'store'])->name('restaurants.store')->middleware('auth');
+    // Edit before confirmation or store newly created restaurant
+    Route::post('/restaurants/store', [RestaurantController::class, 'store'])->name('restaurants.store');
 
-// Show single restaurant
-Route::get('/restaurants/{id}', [RestaurantController::class, 'show'])->middleware('auth');
+    // Show single restaurant
+    Route::get('/restaurants/{id}', [RestaurantController::class, 'show']);
 
-// Show edit form
-Route::get('/restaurants/{id}/edit', [RestaurantController::class, 'edit'])->name('restaurants.edit')->middleware('auth');
+    // Show edit form
+    Route::get('/restaurants/{id}/edit', [RestaurantController::class, 'edit'])->name('restaurants.edit');
 
-// Update restaurant data
-Route::put('/restaurants/{id}', [RestaurantController::class, 'update'])->middleware('auth');
+    // Update restaurant data
+    Route::put('/restaurants/{id}', [RestaurantController::class, 'update']);
 
-// Delete restaurant
-Route::delete('/restaurants/{id}', [RestaurantController::class, 'destroy'])->middleware('auth');
-    
+    // Delete restaurant
+    Route::delete('/restaurants/{id}', [RestaurantController::class, 'destroy']);
+});
 
+/**
+ * Categories
+ */
+Route::middleware('auth')->group(function() {
 
+    // Show create form and list of all categories
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 
-// Categories
-// Show create form and list of all categories
-Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index')->middleware('auth');
+    // Store newly created category
+    Route::post('/categories/store', [CategoryController::class, 'store'])->name('categories.store');
 
-// Store newly created category
-Route::post('/categories/store', [CategoryController::class, 'store'])->name('categories.store')->middleware('auth');
+    // // Show edit form
+    Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
 
-// // Show edit form
-Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit')->middleware('auth');
+    // // Update category
+    Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
 
-// // Update category
-Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update')->middleware('auth');
+    // Delete category
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+});
 
-// Delete category
-Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy')->middleware('auth');
-
-
-
-
-
-// Register/Login
+/**
+ * Register/Login
+ */
 // Show Register Form
 Route::get('/register', [UserController::class, 'create']);
 

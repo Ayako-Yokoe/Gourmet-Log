@@ -26,10 +26,6 @@ class Restaurant extends Model
         'comment'
     ];
 
-    // public function categories(){
-    //     return $this->belongsToMany('App\Models\Category', 'category_tags', 'category_id', 'restaurant_id');
-    // }
-
     // Relationship with Categories
     public function categories(){
         return $this->belongsToMany(Category::class, 'category_tags');

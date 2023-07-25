@@ -61,5 +61,4 @@ class UserController extends Controller
 
         return back()->withErrors(['email' => '入力情報に誤りがあります'])->onlyInput('email');
     }
-
 }

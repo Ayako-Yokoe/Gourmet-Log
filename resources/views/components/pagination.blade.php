@@ -12,7 +12,6 @@
             </a>
         </li>
 
-
         @foreach($paginator->getUrlRange(1, $paginator->lastPage()) as $page => $url)
         <li>
             <a 
@@ -23,7 +22,6 @@
             </a>
         </li>
         @endforeach
-
 
         <li>
             <a 

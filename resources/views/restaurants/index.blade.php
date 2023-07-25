@@ -2,8 +2,6 @@
 
 @section('main')
 
-{{-- @unless (count($restaurants == 0)) --}}
-
 <div class="w-8/12 mx-auto mt-20">
     <h1 class="text-lg font-bold my-4">お店リスト</h1> 
     
@@ -100,21 +98,11 @@
             </tbody>
         </table>
 
-
         <div class="my-4">
             {{ $restaurants->render('components.pagination') }}
         </div>
         
     </div>
 </div>
-
-
-
-
-
-{{-- @else
-<p>No restaurants</p>
-
-@endunless --}}
 
 @endsection

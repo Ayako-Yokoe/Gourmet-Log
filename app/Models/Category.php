@@ -18,11 +18,6 @@ class Category extends Model
         'name'
     ];
 
-    // public function restaurants(){
-    //     return $this->belongsToMany('App\Models\Restautant', 'category_tags', 'restaurant_id', 'category_id');
-    // }
-
-
     public function restaurants(){
         return $this->belongsToMany(Restaurant::class, 'category_tags');
     }

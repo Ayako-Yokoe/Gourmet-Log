@@ -10,24 +10,12 @@ class CategoryController extends Controller
     // Show create form and list of all categories
     public function index(){
         $isEditing = false;
-        //$categories = Category::paginate(10);
 
         $perPage = 10;
         $categories = Category::paginate($perPage);
+        list($from, $to, $total) = $this->getPaginationDetails($categories);
 
-        // Display Pages
-        $from = $categories->firstItem();
-        $to = $categories->lastItem();
-        $total = $categories->total();
-
-
-        return view('categories.index', [
-            'categories' => $categories, 
-            'isEditing' => $isEditing,
-            'from' => $from,
-            'to' => $to,
-            'total' => $total
-        ]);
+        return view('categories.index', compact('categories', 'isEditing', 'from', 'to', 'total'));
     }
 
     // Store newly created category
@@ -46,15 +34,13 @@ class CategoryController extends Controller
     public function edit(Request $request, $id){
         $isEditing = true;
         $editingCategoryId = $id;
-        $categories = Category::paginate(10);
+        
+        $perPage = 10;
+        $categories = Category::paginate($perPage);
         $category = Category::findOrFail($id);
+        list($from, $to, $total) = $this->getPaginationDetails($categories);
 
-        return view('categories.index', [ 
-            'isEditing' => $isEditing,
-            'categories' => $categories,
-            'category' => $category,
-            'editingCategoryId' => $editingCategoryId
-        ]);
+        return view('categories.index', compact('isEditing', 'categories', 'category', 'editingCategoryId', 'from', 'to', 'total'));
     }
 
     // Update category
@@ -79,4 +65,14 @@ class CategoryController extends Controller
 
         return redirect()->route('categories.index');
     }
+
+    // Helper functions
+    private function getPaginationDetails($categories){
+        $from = $categories->firstItem();
+        $to = $categories->lastItem();
+        $total = $categories->total();
+
+        return [$from, $to, $total];
+    }
+
 }

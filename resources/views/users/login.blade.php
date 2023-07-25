@@ -1,6 +1,5 @@
 @extends('components.layout')
 
-
 @section('main')
 
 <x-card> 

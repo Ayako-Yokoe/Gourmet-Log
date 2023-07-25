@@ -2,7 +2,7 @@
 
 @section('main')
 
-<div class="w-3/5 mx-auto mt-10">
+<div class="w-3/5 mx-auto mt-6">
 
     <h1 class="text-lg font-bold my-4">カテゴリー管理</h1>
 
@@ -29,7 +29,7 @@
         </form>
 
         @error('name')
-            {{ $message }}
+            <p class="text-red-500 text-xs mt-1">{{$message}}</p>
         @enderror
     </div>
 
@@ -117,6 +117,5 @@
     </div>
 
 </div>
-
 
 @endsection

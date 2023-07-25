@@ -17,9 +17,6 @@ class RestaurantController extends Controller
     public function index(Request $request){
         $user = Auth::user();
         $restaurantsQuery = Restaurant::where('user_id', $user->id)->orderBy('id', 'asc');
-    
-        $user = Auth::user();
-        $restaurantsQuery = Restaurant::where('user_id', $user->id)->orderBy('id', 'asc');
 
         if($request->filled('search')){
             $search = $request->input('search');
@@ -36,7 +33,7 @@ class RestaurantController extends Controller
 
         // Format phone number
         foreach ($restaurants as $restaurant){
-            $phoneNumber = formatPhoneNumber($restaurant->phone_number);
+            $phoneNumber = $this->formatPhoneNumber($restaurant->phone_number);
             $restaurant->phone_number = $phoneNumber;
         }
 
@@ -45,36 +42,28 @@ class RestaurantController extends Controller
         $to = $restaurants->lastItem();
         $total = $restaurants->total();
 
-        return view('restaurants.index', [
-            'restaurants' => $restaurants,
-            'from' => $from,
-            'to' => $to,
-            'total' => $total
-        ]);
+        return view('restaurants.index', compact('restaurants', 'from', 'to', 'total'));
     }
 
     // Show single restaurant
     public function show($id){
-
         $user = Auth::user();
-
-        // $restaurant = Restaurant::findOrFail($id);
         $restaurant = $user->restaurants()->findOrFail($id);
 
-        $phoneNumber = formatPhoneNumber($restaurant['phone_number']);
+        $phoneNumber = $this->formatPhoneNumber($restaurant['phone_number']);
         $restaurant['phone_number'] = $phoneNumber;
 
         // Categories
         $categories = $restaurant->categories;
         
-        return view('restaurants.show', ['restaurant' => $restaurant, 'categories' => $categories]);
+        return view('restaurants.show', compact('restaurant', 'categories'));
     }
 
     // Show create form
     public function create(){
         $categories = Category::all();
 
-        return view('restaurants.create', ['categories' => $categories]);
+        return view('restaurants.create', compact('categories'));
     }
 
     // Pass input data to confirmation page
@@ -178,7 +167,7 @@ class RestaurantController extends Controller
 
         } else {
             // Return to the create page with input
-            $phoneNumber = formatPhoneNumber($phoneNumberAsInteger);
+            $phoneNumber = $this->formatPhoneNumber($phoneNumberAsInteger);
             $formFields['phone_number'] = $phoneNumber;
 
             // Retrieve category IDs from the input
@@ -196,7 +185,7 @@ class RestaurantController extends Controller
         $user = Auth::user();
         $restaurant = $user->restaurants()->findOrFail($id);
 
-        $phoneNumber = formatPhoneNumber($restaurant['phone_number']);
+        $phoneNumber = $this->formatPhoneNumber($restaurant['phone_number']);
         $restaurant['phone_number'] = $phoneNumber;
 
         // All categories
@@ -204,11 +193,7 @@ class RestaurantController extends Controller
         // Selected category IDs
         $selectedCategoryIds = $restaurant->categories->pluck('id')->toArray();
 
-        return view('restaurants.create', [
-            'restaurant' => $restaurant, 
-            'categories' => $categories,
-            'selectedCategoryIds' => $selectedCategoryIds
-        ]);
+        return view('restaurants.create', compact('restaurant', 'categories', 'selectedCategoryIds'));
     }
 
     // Delete restaurant
@@ -221,5 +206,14 @@ class RestaurantController extends Controller
         }
         
         return redirect()->route('restaurants.index');
+    }
+
+    // Helper functions
+    private function formatPhoneNumber($phoneNumber){
+        if($phoneNumber){
+            $formattedPhoneNumber = substr($phoneNumber, 0, 3) . '-' . substr($phoneNumber, 3, 3) . '-' . substr($phoneNumber, 6, 4);
+            return $formattedPhoneNumber;
+        }
+        return '';
     }
 }

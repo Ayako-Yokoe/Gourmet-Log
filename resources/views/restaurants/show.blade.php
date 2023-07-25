@@ -32,7 +32,6 @@
 
     <div class="my-2">
         <h3>Google Map URL: </h3>
-        {{-- <a>{{ $restaurant->map_url }}</a> --}}
         <iframe
             width="240"
             height="160"
