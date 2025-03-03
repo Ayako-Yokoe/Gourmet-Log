@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- displays site properly based on user's device -->
+
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="./images/favicon-32x32.png"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+        <script src="script.js" defer></script>
+
+        <title>Frontend Mentor | Tip calculator app</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="logo-container">
+                <img src="images/logo.svg" alt="logo" />
+            </div>
+            <main class="main-container">
+                <div class="left-container">
+                    <section class="bill-container">
+                        <label for="bill-input">Bill</label>
+                        <div class="input-wrapper">
+                            <img
+                                src="images/icon-dollar.svg"
+                                alt="dollar sign"
+                            />
+                            <input
+                                id="bill-input"
+                                type="text"
+                                placeholder="0"
+                            />
+                        </div>
+                    </section>
+
+                    <section class="select-tip-container">
+                        <label>Select Tip %</label>
+                        <ul>
+                            <li><button id="five" data-tip="5">5%</button></li>
+                            <li><button id="ten" data-tip="10">10%</button></li>
+                            <li>
+                                <button id="fifteen" data-tip="15">15%</button>
+                            </li>
+                            <li>
+                                <button id="twenty-five" data-tip="25">
+                                    25%
+                                </button>
+                            </li>
+                            <li>
+                                <button id="fifty" data-tip="50">50%</button>
+                            </li>
+
+                            <li id="custom">
+                                <button class="custom-btn" id="custom-btn">
+                                    Custom
+                                </button>
+
+                                <input
+                                    class="custom-input"
+                                    id="custom-input"
+                                    type="number"
+                                    placeholder="0"
+                                    style="display: none; width: 100%"
+                                />
+                            </li>
+                        </ul>
+                    </section>
+                    <section class="people-section">
+                        <div class="people-label-wrapper">
+                            <label for="people-input">Number of People</label>
+                            <p
+                                id="people-error-message"
+                                class="error-message"
+                                style="display: none"
+                            >
+                                Can't be zero
+                            </p>
+                        </div>
+                        <div class="input-wrapper">
+                            <img
+                                src="images/icon-person.svg"
+                                alt="person sign"
+                            />
+                            <input
+                                id="people-input"
+                                type="number"
+                                placeholder="0"
+                            />
+                        </div>
+                    </section>
+                </div>
+
+                <div class="right-container">
+                    <section class="tip-amount-section">
+                        <div>
+                            <div class="tip-row">
+                                <p class="tip-title">
+                                    Tip Amount
+                                    <span class="tip-subtitle">/ person</span>
+                                </p>
+                                <p class="tip-total">
+                                    $<span id="tip-amount"></span>
+                                </p>
+                            </div>
+
+                            <div class="tip-row">
+                                <p class="tip-title">
+                                    Total
+                                    <span class="tip-subtitle">/ person</span>
+                                </p>
+                                <p class="tip-total">
+                                    $<span id="total"></span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <button class="reset-btn" id="reset-btn" disabled>
+                            Reset
+                        </button>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>
